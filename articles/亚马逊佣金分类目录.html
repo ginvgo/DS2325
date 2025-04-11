@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>亚马逊产品分类</title>
+    <style>
+        :root {
+            --primary-color: #232F3E;
+            --secondary-color: #FF9900;
+            --hover-color: #146EB4;
+            --text-color: #333;
+            --light-bg: #f8f8f8;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --category-colors: #FF9900, #146EB4, #31A354, #756BB1, #636363;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+        }
+        
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--light-bg);
+            padding-bottom: 2rem;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .category-btn {
+            background-color: white;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .categories-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+        
+        .category {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .category-header h2 {
+            flex-grow: 1;
+            margin: 0;
+        }
+        
+        .category-icon {
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .category-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .category-toggle.open {
+            transform: rotate(180deg);
+        }
+        
+        .category-content {
+            padding: 1.5rem;
+            display: none;
+        }
+        
+        .category-content.open {
+            display: block;
+        }
+        
+        .category-description {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .subcategories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+        
+        .subcategory {
+            padding: 0.8rem;
+            background-color: var(--light-bg);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .subcategory:hover {
+            background-color: #e9e9e9;
+            transform: translateX(5px);
+        }
+        
+        .commission-info {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        
+        .commission-info h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        .commission-info p {
+            margin: 0.25rem 0;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1rem;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .subcategories {
+                grid-template-columns: 1fr;
+            }
+            
+            .category-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>亚马逊产品分类目录</h1>
+            <p>全面了解亚马逊各类产品的详细分类信息及销售佣金费率</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="category-nav">
+            <button class="category-btn" data-target="amazon-devices">亚马逊设备配件</button>
+            <button class="category-btn" data-target="automotive">汽车和户外动力设备</button>
+            <button class="category-btn" data-target="baby">母婴</button>
+            <button class="category-btn" data-target="bags">背包、手提包和箱包</button>
+            <button class="category-btn" data-target="tools">基础设备电动工具</button>
+            <button class="category-btn" data-target="beauty">美妆和个护健康</button>
+            <button class="category-btn" data-target="industrial">商业、工业与科学用品</button>
+            <button class="category-btn" data-target="apparel">服装和配饰</button>
+            <button class="category-btn" data-target="small-appliances">小型电器</button>
+            <button class="category-btn" data-target="computers">电脑</button>
+            <button class="category-btn" data-target="electronics">消费类电子产品</button>
+            <button class="category-btn" data-target="electronics-accessories">电子产品配件</button>
+            <button class="category-btn" data-target="eyewear">眼镜</button>
+            <button class="category-btn" data-target="art">艺术品</button>
+            <button class="category-btn" data-target="footwear">鞋靴</button>
+            <button class="category-btn" data-target="large-appliances">全尺寸电器</button>
+            <button class="category-btn" data-target="furniture">家具</button>
+            <button class="category-btn" data-target="gift-cards">礼品卡</button>
+            <button class="category-btn" data-target="grocery">食品</button>
+            <button class="category-btn" data-target="home-kitchen">家居及厨房用品</button>
+            <button class="category-btn" data-target="jewelry">珠宝首饰</button>
+            <button class="category-btn" data-target="lawn-garden">草坪和园艺</button>
+            <button class="category-btn" data-target="mowers-snow">割草机和除雪机</button>
+            <button class="category-btn" data-target="mattresses">床垫</button>
+            <button class="category-btn" data-target="media">媒介类商品</button>
+            <button class="category-btn" data-target="seller-fulfilled">卖家自配送服务</button>
+            <button class="category-btn" data-target="instruments">乐器和影音制作</button>
+            <button class="category-btn" data-target="office">办公用品</button>
+            <button class="category-btn" data-target="pet">宠物用品</button>
+            <button class="category-btn" data-target="sports-outdoors">运动户外</button>
+            <button class="category-btn" data-target="tires">轮胎</button>
+            <button class="category-btn" data-target="tools-home">工具和家居装修</button>
+            <button class="category-btn" data-target="toys-games">玩具和游戏</button>
+            <button class="category-btn" data-target="video-game-consoles">视频游戏机</button>
+            <button class="category-btn" data-target="video-games">视频游戏和游戏配件</button>
+            <button class="category-btn" data-target="watches">钟表</button>
+        </div>
+        
+        <div class="categories-container">
+            <!-- 亚马逊设备配件 -->
+            <div id="amazon-devices" class="category">
+                <div class="category-header" style="background-color: #FF9900;">
+                    <span class="category-icon">📱</span>
+                    <h2>亚马逊设备配件</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本费用分类包括专为亚马逊设备设计的配件，如图书阅读器配件、Echo 配件、Fire 配件、Ring 配件和平板电脑配件。不包括亚马逊设备本身或非亚马逊设备的配件。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">亚马逊图书阅读器配件</div>
+                        <div class="subcategory">亚马逊 Echo 配件</div>
+                        <div class="subcategory">亚马逊 Fire 配件</div>
+                        <div class="subcategory">亚马逊 Ring 配件</div>
+                        <div class="subcategory">亚马逊平板电脑配件</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：45%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 汽车和户外动力设备 -->
+            <div id="automotive" class="category">
+                <div class="category-header" style="background-color: #146EB4;">
+                    <span class="category-icon">🚗</span>
+                    <h2>汽车和户外动力设备</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包含广泛的汽车和户外动力车产品，包括其零件和配件，如压力表、车盖、千斤顶、支架、汽车油漆、电池、机油以及户外动力车。不包括轮胎或汽车影音商品、婴儿汽车座椅配件。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">胎压计</div>
+                        <div class="subcategory">拖车钩</div>
+                        <div class="subcategory">车载自行车架</div>
+                        <div class="subcategory">户外动力车罩</div>
+                        <div class="subcategory">汽车座椅配件</div>
+                        <div class="subcategory">汽车通用型座椅罩</div>
+                        <div class="subcategory">房车驻车千斤顶</div>
+                        <div class="subcategory">千斤顶支架</div>
+                        <div class="subcategory">户外动力车支架</div>
+                        <div class="subcategory">汽车侧挡泥板</div>
+                        <div class="subcategory">雨刷片</div>
+                        <div class="subcategory">汽车喷漆</div>
+                        <div class="subcategory">汽车轮胎充气机压缩机</div>
+                        <div class="subcategory">汽车电路测试仪</div>
+                        <div class="subcategory">汽车电动燃油泵</div>
+                        <div class="subcategory">汽车防冻液</div>
+                        <div class="subcategory">汽车空调制冷剂</div>
+                        <div class="subcategory">汽车电池</div>
+                        <div class="subcategory">机油</div>
+                        <div class="subcategory">汽车齿轮油</div>
+                        <div class="subcategory">汽车机油添加剂</div>
+                        <div class="subcategory">户外动力车辆</div>
+                        <div class="subcategory">割草机配件</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：12%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 母婴 -->
+            <div id="baby" class="category">
+                <div class="category-header" style="background-color: #31A354;">
+                    <span class="category-icon">👶</span>
+                    <h2>母婴</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种婴幼儿用品，如婴儿摇篮、婴儿背带、婴儿床、背巾、安全用品、高脚椅、增高座椅、纪念品、婴儿推车和婴儿汽车座椅。不包括婴儿服装或婴儿食品和配方奶粉，它们属于不同的分类。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">婴儿摇篮</div>
+                        <div class="subcategory">床边婴儿床</div>
+                        <div class="subcategory">正面儿童背带</div>
+                        <div class="subcategory">儿童背巾</div>
+                        <div class="subcategory">儿童家居安全用品</div>
+                        <div class="subcategory">学步儿童安全带和牵引带</div>
+                        <div class="subcategory">儿童床安全床栏</div>
+                        <div class="subcategory">儿童床安全扶手</div>
+                        <div class="subcategory">便携式婴儿床</div>
+                        <div class="subcategory">婴幼儿旅行床</div>
+                        <div class="subcategory">儿童餐椅</div>
+                        <div class="subcategory">儿童增高座椅</div>
+                        <div class="subcategory">婴儿照片日记</div>
+                        <div class="subcategory">婴儿纪念品</div>
+                        <div class="subcategory">婴儿手印和足印制作器</div>
+                        <div class="subcategory">婴儿喂养用品礼品套装</div>
+                        <div class="subcategory">婴儿礼品篮</div>
+                        <div class="subcategory">车用宝宝观察镜</div>
+                        <div class="subcategory">婴儿落地座椅和躺椅</div>
+                        <div class="subcategory">婴儿坐椅</div>
+                        <div class="subcategory">婴儿摇椅</div>
+                        <div class="subcategory">标准婴儿车</div>
+                        <div class="subcategory">轻便婴儿车</div>
+                        <div class="subcategory">慢跑婴儿车</div>
+                        <div class="subcategory">婴儿推车</div>
+                        <div class="subcategory">可折叠儿童安全座椅</div>
+                        <div class="subcategory">儿童增高型安全座椅</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格不超过 $10.00 的商品，收取 8%</p>
+                        <p>对于总销售价格超过 $10.00 的商品，收取 15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 背包、手提包和箱包 -->
+            <div id="bags" class="category">
+                <div class="category-header" style="background-color: #756BB1;">
+                    <span class="category-icon">👜</span>
+                    <h2>背包、手提包和箱包</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本费用分类包括各种箱包和旅行用品，包括背包、洗漱包、手提包、钱包、行李箱和行李箱配件、行李袋、笔记本电脑包和尿布包。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">毛绒背包</div>
+                        <div class="subcategory">战术背包</div>
+                        <div class="subcategory">狩猎背包</div>
+                        <div class="subcategory">洗漱包</div>
+                        <div class="subcategory">化妆包和化妆箱</div>
+                        <div class="subcategory">手提包</div>
+                        <div class="subcategory">HOBO 手提包</div>
+                        <div class="subcategory">手提单肩包</div>
+                        <div class="subcategory">手拿包</div>
+                        <div class="subcategory">运动手提包</div>
+                        <div class="subcategory">公文包</div>
+                        <div class="subcategory">鞋袋</div>
+                        <div class="subcategory">新潮钱包</div>
+                        <div class="subcategory">钱包</div>
+                        <div class="subcategory">钱夹</div>
+                        <div class="subcategory">信用卡夹</div>
+                        <div class="subcategory">行李箱标牌</div>
+                        <div class="subcategory">行李带</div>
+                        <div class="subcategory">箱包配件</div>
+                        <div class="subcategory">行李袋</div>
+                        <div class="subcategory">旅行手提包</div>
+                        <div class="subcategory">行李箱收纳包</div>
+                        <div class="subcategory">登机箱</div>
+                        <div class="subcategory">儿童行李箱</div>
+                        <div class="subcategory">手提箱</div>
+                        <div class="subcategory">婴儿睡袋</div>
+                        <div class="subcategory">布制尿不湿袋</div>
+                        <div class="subcategory">尿布包</div>
+                        <div class="subcategory">尿布手提袋</div>
+                        <div class="subcategory">可重复使用的便当包</div>
+                        <div class="subcategory">笔记本电脑包和保护套</div>
+                        <div class="subcategory">笔记本电脑邮差包和单肩包</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 基础设备电动工具 -->
+            <div id="tools" class="category">
+                <div class="category-header" style="background-color: #636363;">
+                    <span class="category-icon">🔧</span>
+                    <h2>基础设备电动工具</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括用于建筑、制造、维护和维修的电动工具及其零件和配件，如钻头、圆锯、冲击钻、角磨机和刨槽机。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">电钻</div>
+                        <div class="subcategory">电动圆锯</div>
+                        <div class="subcategory">电动冲击钻</div>
+                        <div class="subcategory">电动角磨机</div>
+                        <div class="subcategory">电动刨槽机</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：12%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 美妆和个护健康 -->
+            <div id="beauty" class="category">
+                <div class="category-header" style="background-color: #FF9900;">
+                    <span class="category-icon">💄</span>
+                    <h2>美妆和个护健康</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括香水、化妆品、个人卫生用品、急救用品、按摩设备、助行器材、女性卫生用品、沐浴和淋浴产品以及面霜和保湿霜。还包含营养补充剂以及非处方药。不包括医疗专业人士严格用于为病人提供治疗的医疗器械，也不包括与宠物相关的个护健康用品。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">淡香水</div>
+                        <div class="subcategory">古龙水</div>
+                        <div class="subcategory">香水套装</div>
+                        <div class="subcategory">粉底</div>
+                        <div class="subcategory">睫毛膏</div>
+                        <div class="subcategory">唇膏</div>
+                        <div class="subcategory">洗手液</div>
+                        <div class="subcategory">急救用品</div>
+                        <div class="subcategory">卫生巾</div>
+                        <div class="subcategory">血压监测仪</div>
+                        <div class="subcategory">电动按摩器</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格不超过 $10.00 的商品，收取 8%</p>
+                        <p>对于总销售价格超过 $10.00 的商品，收取 15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 商业、工业与科学用品 -->
+            <div id="industrial" class="category">
+                <div class="category-header" style="background-color: #146EB4;">
+                    <span class="category-icon">🏭</span>
+                    <h2>商业、工业与科学用品</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括 3D 打印机配件、农用机械、工业泵以及各种科学和医疗设备。包括商业实验室设备和用品。不包括家用家具、用于汽车用品或消费类电子产品的润滑剂。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">3D 打印机配件</div>
+                        <div class="subcategory">农用机械</div>
+                        <div class="subcategory">工业潜水泵</div>
+                        <div class="subcategory">显微镜</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：12%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 服装和配饰 -->
+            <div id="apparel" class="category">
+                <div class="category-header" style="background-color: #31A354;">
+                    <span class="category-icon">👗</span>
+                    <h2>服装和配饰</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括所有类型的男士、女士和儿童服装和配饰，包括外衣、内衣、泳衣、正装、休闲装、运动装、戏服和各种服装配饰。不包括鞋靴或珠宝首饰，它们属于单独的分类。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">运动装</div>
+                        <div class="subcategory">外衣</div>
+                        <div class="subcategory">泳衣</div>
+                        <div class="subcategory">内衣</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格不超过 $15.00 的商品，收取 5%</p>
+                        <p>对于总销售价格超过 $15.00 且不超过 $20.00 的商品，收取 10%</p>
+                        <p>对于总销售价格超过 $20.00 的商品，收取 17%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 小型电器 -->
+            <div id="small-appliances" class="category">
+                <div class="category-header" style="background-color: #756BB1;">
+                    <span class="category-icon">🔌</span>
+                    <h2>小型电器</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括小型家用电器，如微波炉、台面洗碗机、小型冰箱、饮水机和便携式洗衣设备。不包括全尺寸电器。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">微波炉</div>
+                        <div class="subcategory">台式洗碗机</div>
+                        <div class="subcategory">小型冰箱</div>
+                        <div class="subcategory">饮水机</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格中不超过 $300.00 的部分，收取 15%</p>
+                        <p>对于总销售价格中超过 $300.00 的部分，收取 8%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 电脑 -->
+            <div id="computers" class="category">
+                <div class="category-header" style="background-color: #636363;">
+                    <span class="category-icon">💻</span>
+                    <h2>电脑</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括电脑及相关设备，包括台式电脑、笔记本电脑、平板电脑、电子书阅读器，以及风扇和内存等电脑组件。不包括软件或电脑配件。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">台式电脑</div>
+                        <div class="subcategory">笔记本电脑</div>
+                        <div class="subcategory">平板电脑</div>
+                        <div class="subcategory">电子书阅读器</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：8%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 消费类电子产品 -->
+            <div id="electronics" class="category">
+                <div class="category-header" style="background-color: #FF9900;">
+                    <span class="category-icon">📺</span>
+                    <h2>消费类电子产品</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种电子设备，如 DVD 和蓝光播放器、家庭影院系统、扬声器、投影仪、无线电设备、打印机、扫描仪、GPS 装置、相机、手机、智能手表和活动追踪器。不包括电脑系统、平板电脑、笔记本电脑或大型电器。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">DVD播放器</div>
+                        <div class="subcategory">家庭影院系统</div>
+                        <div class="subcategory">相机</div>
+                        <div class="subcategory">手机</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：8%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 电子产品配件 -->
+            <div id="electronics-accessories" class="category">
+                <div class="category-header" style="background-color: #146EB4;">
+                    <span class="category-icon">🔋</span>
+                    <h2>电子产品配件</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括电子设备充电器、电池、相机配件、手机配件、线缆、适配器、支架、外壳以及各种其他电子插件和外围设备等配件。不包括电子设备本身。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">充电器</div>
+                        <div class="subcategory">电池</div>
+                        <div class="subcategory">手机壳</div>
+                        <div class="subcategory">数据线</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格中不超过 $100.00 的部分，收取 15%</p>
+                        <p>对于总销售价格中超过 $100.00 的部分，收取 8%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 眼镜 -->
+            <div id="eyewear" class="category">
+                <div class="category-header" style="background-color: #31A354;">
+                    <span class="category-icon">👓</span>
+                    <h2>眼镜</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种类型的眼镜，如太阳镜、处方眼镜框、安全眼镜、护目镜和相关配件。不包括用于增强现实的眼镜。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">太阳镜</div>
+                        <div class="subcategory">处方眼镜框</div>
+                        <div class="subcategory">安全眼镜</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 艺术品 -->
+            <div id="art" class="category">
+                <div class="category-header" style="background-color: #756BB1;">
+                    <span class="category-icon">🎨</span>
+                    <h2>艺术品</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种艺术品，如画作、雕塑和艺术收藏品。</p>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格中不超过 $100.00 的部分，收取 20%</p>
+                        <p>对于总销售价格中超过 $100.00 且不超过 $1,000.00 的部分，收取 15%</p>
+                        <p>对于总销售价格中超过 $1,000.00 且不超过 $5,000.00 的部分，收取 10%</p>
+                        <p>对于总销售价格中超过 $5,000.00 的部分，收取 5%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 鞋靴 -->
+            <div id="footwear" class="category">
+                <div class="category-header" style="background-color: #636363;">
+                    <span class="category-icon">👟</span>
+                    <h2>鞋靴</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括所有类型的鞋靴和相关配饰，包括靴子、凉鞋、运动鞋、正装鞋、拖鞋和鞋靴护理用品。不包括袜子或针织品，它们属于服装分类。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">靴子</div>
+                        <div class="subcategory">凉鞋</div>
+                        <div class="subcategory">运动鞋</div>
+                        <div class="subcategory">拖鞋</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 全尺寸电器 -->
+            <div id="large-appliances" class="category">
+                <div class="category-header" style="background-color: #FF9900;">
+                    <span class="category-icon">🧊</span>
+                    <h2>全尺寸电器</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括大型家用电器，如烤箱、炉灶、洗碗机、烘干机和全尺寸冰箱。不包括小型或便携式电器。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">烤箱</div>
+                        <div class="subcategory">洗碗机</div>
+                        <div class="subcategory">冰箱</div>
+                        <div class="subcategory">烘干机</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：8%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 家具 -->
+            <div id="furniture" class="category">
+                <div class="category-header" style="background-color: #146EB4;">
+                    <span class="category-icon">🛋️</span>
+                    <h2>家具</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括书柜、梳妆台、架子、柜子、桌子、椅子以及家庭娱乐家具。不包括床垫、挂钩或家居展示架。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">书柜</div>
+                        <div class="subcategory">桌子</div>
+                        <div class="subcategory">椅子</div>
+                        <div class="subcategory">电视柜</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格中不超过 $200.00 的部分，收取 15%</p>
+                        <p>对于总销售价格中超过 $200.00 的部分，收取 10%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 礼品卡 -->
+            <div id="gift-cards" class="category">
+                <div class="category-header" style="background-color: #31A354;">
+                    <span class="category-icon">🎁</span>
+                    <h2>礼品卡</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括亚马逊礼品卡。</p>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：20%</p>
+                        <p>最低销售佣金：无</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 食品 -->
+            <div id="grocery" class="category">
+                <div class="category-header" style="background-color: #756BB1;">
+                    <span class="category-icon">🍔</span>
+                    <h2>食品</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本类包括各种各样的食品和饮料，从咖啡和茶到零食、糖果、烘焙用具和烘焙食品等。还包含婴儿食品和配方奶粉。不包括保健膳食补充剂。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">咖啡</div>
+                        <div class="subcategory">零食</div>
+                        <div class="subcategory">糖果</div>
+                        <div class="subcategory">婴儿食品</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格不超过 $15.00 的商品，收取 8%</p>
+                        <p>对于总销售价格超过 $15.00 的商品，收取 15%</p>
+                        <p>最低销售佣金：无</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 家居及厨房用品 -->
+            <div id="home-kitchen" class="category">
+                <div class="category-header" style="background-color: #636363;">
+                    <span class="category-icon">🏠</span>
+                    <h2>家居及厨房用品</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种家居装饰、办公室和厨房用品，包括仿真植物、美术用品、钟表、蜡烛、家用香薰、地毯、篮子、床上用品、毛巾、炊具和餐具。不包括大型电器、家用清洁工具和家具。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">地毯</div>
+                        <div class="subcategory">床上用品</div>
+                        <div class="subcategory">炊具</div>
+                        <div class="subcategory">餐具</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 珠宝首饰 -->
+            <div id="jewelry" class="category">
+                <div class="category-header" style="background-color: #FF9900;">
+                    <span class="category-icon">💍</span>
+                    <h2>珠宝首饰</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种类型的珠宝首饰，如手链、项链、耳环、戒指、身体珠宝和珠宝首饰制作用品。不包括钟表，它们属于单独的分类。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">手链</div>
+                        <div class="subcategory">项链</div>
+                        <div class="subcategory">耳环</div>
+                        <div class="subcategory">戒指</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格中不超过 $250.00 的部分，收取 20%</p>
+                        <p>对于总销售价格中超过 $250.00 的部分，收取 5%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 草坪和园艺 -->
+            <div id="lawn-garden" class="category">
+                <div class="category-header" style="background-color: #146EB4;">
+                    <span class="category-icon">🌿</span>
+                    <h2>草坪和园艺</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括广泛的户外和园艺产品，包括植物护理用品、户外装饰品、烧烤架、泳池用品、信箱、花盆和草坪护理设备。不包括大型户外动力设备，如割草机或除雪机。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">花盆</div>
+                        <div class="subcategory">烧烤架</div>
+                        <div class="subcategory">泳池用品</div>
+                        <div class="subcategory">信箱</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 割草机和除雪机 -->
+            <div id="mowers-snow" class="category">
+                <div class="category-header" style="background-color: #31A354;">
+                    <span class="category-icon">🚜</span>
+                    <h2>割草机和除雪机</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种户外动力设备，如割草机、除雪机和相关配件。不包括小型园艺工具或汽车用品。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">割草机</div>
+                        <div class="subcategory">除雪机</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格不超过 $500.00 的商品，收取 15%</p>
+                        <p>对于总销售价格超过 $500.00 的商品，收取 8%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 床垫 -->
+            <div id="mattresses" class="category">
+                <div class="category-header" style="background-color: #756BB1;">
+                    <span class="category-icon">🛏️</span>
+                    <h2>床垫</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种类型的床垫和相关配件，如记忆泡沫床垫、弹簧床垫和床垫保护套。不包括床上用品或家具。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">记忆泡沫床垫</div>
+                        <div class="subcategory">弹簧床垫</div>
+                        <div class="subcategory">床垫保护套</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 媒介类商品 -->
+            <div id="media" class="category">
+                <div class="category-header" style="background-color: #636363;">
+                    <span class="category-icon">📚</span>
+                    <h2>媒介类商品 - 图书、DVD、音乐、软件、视频</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括图书、DVD、音乐光盘、软件和视频内容。不包括电子设备或配件。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">图书</div>
+                        <div class="subcategory">DVD</div>
+                        <div class="subcategory">音乐CD</div>
+                        <div class="subcategory">软件</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：无</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 卖家自配送服务 -->
+            <div id="seller-fulfilled" class="category">
+                <div class="category-header" style="background-color: #FF9900;">
+                    <span class="category-icon">🚚</span>
+                    <h2>卖家自配送服务</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括卖家自行配送的商品。</p>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：20%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 乐器和影音制作 -->
+            <div id="instruments" class="category">
+                <div class="category-header" style="background-color: #146EB4;">
+                    <span class="category-icon">🎸</span>
+                    <h2>乐器和影音制作</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种乐器和影音制作设备，如吉他、钢琴、麦克风和录音设备。不包括消费类电子产品或配件。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">吉他</div>
+                        <div class="subcategory">钢琴</div>
+                        <div class="subcategory">麦克风</div>
+                        <div class="subcategory">录音设备</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 办公用品 -->
+            <div id="office" class="category">
+                <div class="category-header" style="background-color: #31A354;">
+                    <span class="category-icon">📎</span>
+                    <h2>办公用品</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括办公用具，如笔、纸张、文件夹、计算器和办公家具配件。不包括电脑或大型家具。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">笔</div>
+                        <div class="subcategory">纸张</div>
+                        <div class="subcategory">文件夹</div>
+                        <div class="subcategory">计算器</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 宠物用品 -->
+            <div id="pet" class="category">
+                <div class="category-header" style="background-color: #756BB1;">
+                    <span class="category-icon">🐾</span>
+                    <h2>宠物用品</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括宠物相关产品，如宠物食品、玩具、笼子、服装和健康用品。不包括人类个护健康产品。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">宠物食品</div>
+                        <div class="subcategory">宠物玩具</div>
+                        <div class="subcategory">宠物笼子</div>
+                        <div class="subcategory">宠物服装</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%，但处方饲粮为 22%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 运动户外 -->
+            <div id="sports-outdoors" class="category">
+                <div class="category-header" style="background-color: #636363;">
+                    <span class="category-icon">⚽</span>
+                    <h2>运动户外</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括运动和户外活动相关产品，如运动装备、露营用品、健身器材和户外服装。不包括汽车用品或大型户外动力设备。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">运动装备</div>
+                        <div class="subcategory">露营用品</div>
+                        <div class="subcategory">健身器材</div>
+                        <div class="subcategory">户外服装</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 轮胎 -->
+            <div id="tires" class="category">
+                <div class="category-header" style="background-color: #FF9900;">
+                    <span class="category-icon">🚗</span>
+                    <h2>轮胎</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种轮胎和相关配件，如汽车轮胎、自行车轮胎和轮胎修补工具。不包括其他汽车用品。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">汽车轮胎</div>
+                        <div class="subcategory">自行车轮胎</div>
+                        <div class="subcategory">轮胎修补工具</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：10%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 工具和家居装修 -->
+            <div id="tools-home" class="category">
+                <div class="category-header" style="background-color: #146EB4;">
+                    <span class="category-icon">🔧</span>
+                    <h2>工具和家居装修</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种工具和家居装修用品，如电动工具、手动工具、油漆和五金件。不包括家具或大型电器。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">电动工具</div>
+                        <div class="subcategory">手动工具</div>
+                        <div class="subcategory">油漆</div>
+                        <div class="subcategory">五金件</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 玩具和游戏 -->
+            <div id="toys-games" class="category">
+                <div class="category-header" style="background-color: #31A354;">
+                    <span class="category-icon">🎲</span>
+                    <h2>玩具和游戏</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括儿童玩具和游戏，如积木、娃娃、棋盘游戏和户外玩具。不包括视频游戏。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">积木</div>
+                        <div class="subcategory">娃娃</div>
+                        <div class="subcategory">棋盘游戏</div>
+                        <div class="subcategory">户外玩具</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 视频游戏机 -->
+            <div id="video-game-consoles" class="category">
+                <div class="category-header" style="background-color: #756BB1;">
+                    <span class="category-icon">🎮</span>
+                    <h2>视频游戏机</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括视频游戏主机，如家用游戏机和便携式游戏机。不包括游戏软件或配件。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">家用游戏机</div>
+                        <div class="subcategory">便携式游戏机</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：8%</p>
+                        <p>最低销售佣金：无</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 视频游戏和游戏配件 -->
+            <div id="video-games" class="category">
+                <div class="category-header" style="background-color: #636363;">
+                    <span class="category-icon">🕹️</span>
+                    <h2>视频游戏和游戏配件</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括视频游戏软件和相关配件，如游戏手柄、耳机和存储卡。不包括游戏主机。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">视频游戏软件</div>
+                        <div class="subcategory">游戏手柄</div>
+                        <div class="subcategory">游戏耳机</div>
+                        <div class="subcategory">存储卡</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>佣金费率：15%</p>
+                        <p>最低销售佣金：无</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 钟表 -->
+            <div id="watches" class="category">
+                <div class="category-header" style="background-color: #FF9900;">
+                    <span class="category-icon">⌚</span>
+                    <h2>钟表</h2>
+                    <span class="category-toggle">▼</span>
+                </div>
+                <div class="category-content">
+                    <div class="category-description">
+                        <p>本分类包括各种手表和相关配件，如智能手表、机械表和表带。不包括珠宝首饰。</p>
+                    </div>
+                    <div class="subcategories">
+                        <div class="subcategory">智能手表</div>
+                        <div class="subcategory">机械表</div>
+                        <div class="subcategory">表带</div>
+                    </div>
+                    <div class="commission-info">
+                        <h3>销售佣金费率</h3>
+                        <p>对于总销售价格中不超过 $1,500.00 的部分，收取 16%</p>
+                        <p>对于总销售价格中超过 $1,500.00 的部分，收取 3%</p>
+                        <p>最低销售佣金：$0.30</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>© 2025 亚马逊产品分类目录 | 内容仅供参考</p>
+        </div>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstCategory = document.querySelector('.category');
+            const firstContent = firstCategory.querySelector('.category-content');
+            const firstToggle = firstCategory.querySelector('.category-toggle');
+            firstContent.classList.add('open');
+            firstToggle.classList.add('open');
+            
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            categoryHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const toggle = this.querySelector('.category-toggle');
+                    
+                    if (content.classList.contains('open')) {
+                        content.classList.remove('open');
+                        toggle.classList.remove('open');
+                    } else {
+                        content.classList.add('open', 'animate-fade-in');
+                        toggle.classList.add('open');
+                    }
+                });
+            });
+            
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const targetCategory = document.getElementById(targetId);
+                    
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    targetCategory.scrollIntoView({behavior: 'smooth'});
+                    
+                    const content = targetCategory.querySelector('.category-content');
+                    const toggle = targetCategory.querySelector('.category-toggle');
+                    
+                    document.querySelectorAll('.category-content').forEach(c => {
+                        c.classList.remove('open');
+                        c.previousElementSibling.querySelector('.category-toggle').classList.remove('open');
+                    });
+                    
+                    content.classList.add('open', 'animate-fade-in');
+                    toggle.classList.add('open');
+                });
+            });
+            
+            document.querySelector('.category-btn').classList.add('active');
+        });
+    </script>
+</body>
+</html>
