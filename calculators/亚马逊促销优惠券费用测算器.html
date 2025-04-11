@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promotion and Coupon Fee Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .calculator {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input {
+            width: 98%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        .col {
+            flex: 1;
+            padding: 0 10px;
+            min-width: 300px;
+        }
+        .results {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 17px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-label {
+            font-weight: bold;
+        }
+        .formula {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        .savings {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .positive {
+            color: #28a745;
+        }
+        .negative {
+            color: #dc3545;
+        }
+        .calculation-details {
+            background-color: #e9f7fe;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 300px;
+        }
+        button:hover {
+            background-color: #0052a3;
+        }
+        .summary {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            c
+        }
+        .note {
+            background-color: #fffde7;
+            border-left: 4px solid #ffc107;
+            padding: 10px 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1 class="title">亚马逊优惠促销费用测算</h1>
+<h5 style="text-align:center;">
+	<table style="text-align:center;width:30%;
+                  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+                  background-color: #fffde7;
+            border-left: 3px solid #ffc107;
+            padding: 1px 5px;" 
+           cellpadding="1" cellspacing="0" border="0" bordercolor="#FFFFFF" align="center">
+		<tbody>
+				<td>
+					<b>By：Ginv  <span style="color:#0052a3;"> [ 公众号: Adobe of Amazon ]<span style="color:#000000;"></span></span></b> 
+				</td>
+		</tbody>
+	</table>
+<br />
+</h5>
+
+        <div class="row">
+            <div class="col">
+                <h2>选择输入区</h2>
+                <div class="form-group">
+                    <label for="promoType">促销类型</label>
+                    <select id="promoType">
+                        <option value="deal">Z Deal</option>
+                        <option value="lightning">Lightning Deal</option>
+                        <option value="coupon">Coupon</option>
+                        <option value="ped">Prime Exclusive Discount</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="season">季节类型</label>
+                    <select id="season">
+                        <option value="nonpeak">Non-Peak Season</option>
+                        <option value="prime">Prime Day/Peak Season</option>
+                    </select>
+                </div>
+                <div id="durationGroup" class="form-group">
+                    <label for="duration">促销时长 (天)</label>
+                    <input type="number" id="duration" min="1" max="14" value="7">
+                </div>
+                <div id="orderGroup" class="form-group">
+                    <label for="orderQuantity">订单量</label>
+                    <input type="number" id="orderQuantity" min="1" value="100">
+                </div>
+                <div id="priceGroup" class="form-group">
+                    <label for="salePrice">售价 ($)</label>
+                    <input type="number" id="salePrice" min="0.01" step="0.01" value="19.99">
+                </div>
+            </div>
+            <div class="col">
+                <h2>结果</h2>
+                <div class="results">
+                    <div class="result-item">
+                        <div>
+                            <span class="result-label">旧政策-总费用</span>
+                            <div id="oldFormula" class="formula"></div>
+                        </div>
+                        <span id="oldCost">$0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <div>
+                            <span class="result-label">旧政策-每单费用</span>
+                        </div>
+                        <span id="oldCostPerOrder">$0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <div>
+                            <span class="result-label">新政策-总费用</span>
+                            <div id="newFormula" class="formula"></div>
+                        </div>
+                        <span id="newCost">$0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <div>
+                            <span class="result-label">新政策-每单费用</span>
+                        </div>
+                        <span id="newCostPerOrder">$0.00</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">费用比较</span>
+                        <span id="savings" class="savings">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="calculate">计算</button>
+        <div id="analysis" class="note"></div>
+    </div>
+
+  
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const promoTypeSelect = document.getElementById('promoType');
+            const seasonSelect = document.getElementById('season');
+            const durationInput = document.getElementById('duration');
+            const orderQuantityInput = document.getElementById('orderQuantity');
+            const salePriceInput = document.getElementById('salePrice');
+            const calculateButton = document.getElementById('calculate');
+            
+            const durationGroup = document.getElementById('durationGroup');
+            const orderGroup = document.getElementById('orderGroup');
+            const priceGroup = document.getElementById('priceGroup');
+            
+            const oldCostElement = document.getElementById('oldCost');
+            const newCostElement = document.getElementById('newCost');
+            const oldFormulaElement = document.getElementById('oldFormula');
+            const newFormulaElement = document.getElementById('newFormula');
+            const oldCostPerOrderElement = document.getElementById('oldCostPerOrder');
+            const newCostPerOrderElement = document.getElementById('newCostPerOrder');
+            const savingsElement = document.getElementById('savings');
+            const analysisElement = document.getElementById('analysis');
+            
+            function updateFormVisibility() {
+                const promoType = promoTypeSelect.value;
+                const season = seasonSelect.value;
+                
+                if (promoType === 'lightning') {
+                    durationInput.value = 1;
+                    durationInput.disabled = true;
+                    durationGroup.classList.remove('hidden');
+                } else if (promoType === 'deal') {
+                    durationInput.disabled = false;
+                    durationGroup.classList.remove('hidden');
+                } else {
+                    durationGroup.classList.add('hidden');
+                }
+                
+  
+                if (promoType === 'ped' && season === 'nonpeak') {
+                    orderGroup.classList.add('hidden');
+                    priceGroup.classList.add('hidden');
+                } else {
+                    orderGroup.classList.remove('hidden');
+                    priceGroup.classList.remove('hidden');
+                }
+            }
+            
+
+            function calculateCosts() {
+                const promoType = promoTypeSelect.value;
+                const season = seasonSelect.value;
+                const duration = parseInt(durationInput.value) || 1;
+                const orderQuantity = parseInt(orderQuantityInput.value) || 1;
+                const salePrice = parseFloat(salePriceInput.value) || 0;
+
+                const totalSales = orderQuantity * salePrice;
+                
+                let oldCost = 0;
+                let newCost = 0;
+                let oldFormula = '';
+                let newFormula = '';
+                
+
+                if (promoType === 'deal') {
+                    if (season === 'nonpeak') {
+                        oldCost = 300;
+                        oldFormula = 'Fixed fee: $300';
+                      
+                        const dailyFee = 70 * duration;
+                        const variableFee = totalSales * 0.01; // 1.0%
+                        const cappedVariableFee = Math.min(variableFee, 2000);
+                        newCost = dailyFee + cappedVariableFee;
+                        newFormula = `$70 × ${duration}  + min(${totalSales.toFixed(2)} × 1%, $2,000) = $${dailyFee.toFixed(2)} + $${cappedVariableFee.toFixed(2)}`;
+                    } else if (season === 'prime') {
+
+                        oldCost = 1000;
+                        newCost = 1000;
+                        oldFormula = 'Fixed fee: $1,000';
+                        newFormula = 'Fixed fee: $1,000';
+                    }
+                } else if (promoType === 'lightning') {
+                    if (season === 'nonpeak') {
+                        oldCost = 150;
+                        oldFormula = 'Fixed fee: $150';
+                       
+                        const dailyFee = 70 * duration;
+                        const variableFee = totalSales * 0.01; // 1.0%
+                        const cappedVariableFee = Math.min(variableFee, 2000);
+                        newCost = dailyFee + cappedVariableFee;
+                        newFormula = `$70 × ${duration}  + min(${totalSales.toFixed(2)} × 1%, $2,000) = $${dailyFee.toFixed(2)} + $${cappedVariableFee.toFixed(2)}`;
+                    } else if (season === 'prime') {
+                        oldCost = 500;
+                        newCost = 500;
+                        oldFormula = 'Fixed fee: $500';
+                        newFormula = 'Fixed fee: $500';
+                    }
+                } else if (promoType === 'coupon') {
+                    // Old fee structure
+                    oldCost = orderQuantity * 0.6;
+                    oldFormula = `$0.60 × ${orderQuantity} orders = $${oldCost.toFixed(2)}`;
+                    
+                    // New fee structure
+                    newCost = 5 + (totalSales * 0.025); 
+                    newFormula = `$5 + (${orderQuantity} × $${salePrice.toFixed(2)} × 2.5%) = $5 + $${(totalSales * 0.025).toFixed(2)}`;
+                } else if (promoType === 'ped') {
+                    if (season === 'prime') {
+                        oldCost = 50;
+                        newCost = 100;
+                        oldFormula = 'Fixed fee: $50';
+                        newFormula = 'Fixed fee: $100';
+                    } else {
+                        oldCost = 0;
+                        newCost = 0;
+                        oldFormula = 'Not applicable in non-peak season';
+                        newFormula = 'Not applicable in non-peak season';
+                    }
+                }
+                
+                let oldCostPerOrder = 0;
+                let newCostPerOrder = 0;
+                
+                if (orderQuantity > 0 && (promoType !== 'ped' || season === 'prime')) {
+                    oldCostPerOrder = oldCost / orderQuantity;
+                    newCostPerOrder = newCost / orderQuantity;
+                }
+                
+                oldCostElement.textContent = `$${oldCost.toFixed(2)}`;
+                newCostElement.textContent = `$${newCost.toFixed(2)}`;
+                oldFormulaElement.textContent = oldFormula;
+                newFormulaElement.textContent = newFormula;
+                oldCostPerOrderElement.textContent = `$${oldCostPerOrder.toFixed(2)}`;
+                newCostPerOrderElement.textContent = `$${newCostPerOrder.toFixed(2)}`;
+                
+                const savings = oldCost - newCost;
+                savingsElement.textContent = `$${Math.abs(savings).toFixed(2)} ${savings >= 0 ? 'Saved' : 'Additional'}`;
+                savingsElement.className = 'savings ' + (savings >= 0 ? 'positive' : 'negative');
+                
+               if (promoType === 'deal' && season === 'nonpeak') {
+                    analysisElement.textContent = `对于持续${duration}天、${orderQuantity}个订单、每单$${salePrice.toFixed(2)}（总销售额$${totalSales.toFixed(2)}）的Z划算，新结构费用为$${newCost.toFixed(2)}，旧结构费用为$${oldCost.toFixed(2)}。${savings > 0 ? `您节省了$${savings.toFixed(2)}。` : `这比旧结构多花费了$${Math.abs(savings).toFixed(2)}。`}`;
+                } else if (promoType === 'lightning' && season === 'nonpeak') {
+                    analysisElement.textContent = `对于1天的秒杀、${orderQuantity}个订单、每单$${salePrice.toFixed(2)}（总销售额$${totalSales.toFixed(2)}），新结构费用为$${newCost.toFixed(2)}，旧结构费用为$${oldCost.toFixed(2)}。${savings > 0 ? `您节省了$${savings.toFixed(2)}。` : `这比旧结构多花费了$${Math.abs(savings).toFixed(2)}。`}`;
+                } else if (promoType === 'coupon') {
+                    analysisElement.textContent = `对于${orderQuantity}个订单的优惠券促销、每单$${salePrice.toFixed(2)}（总销售额$${totalSales.toFixed(2)}），新结构费用为$${newCost.toFixed(2)}，旧结构费用为$${oldCost.toFixed(2)}。${savings > 0 ? `您节省了$${savings.toFixed(2)}。` : `这比旧结构多花费了$${Math.abs(savings).toFixed(2)}。`}`;
+                } else if (promoType === 'ped' && season === 'prime') {
+                    analysisElement.textContent = `对于Prime会员日期间的Prime专享折扣，费用已从$50增加到$100。这比旧结构多花费了$50。`;
+                } else if (promoType === 'ped' && season === 'nonpeak') {
+                    analysisElement.textContent = `Prime专享折扣在非旺季不适用。`;
+                } else if (season === 'prime') {
+                    analysisElement.textContent = `在Prime会员日/旺季期间，${promoType === 'deal' ? 'Z划算' : '秒杀'}费用保持不变，为$${oldCost.toFixed(2)}。`;
+                }
+            }
+            
+            promoTypeSelect.addEventListener('change', function() {
+                updateFormVisibility();
+                calculateCosts();
+            });
+            
+            seasonSelect.addEventListener('change', function() {
+                updateFormVisibility();
+                calculateCosts();
+            });
+            
+            durationInput.addEventListener('change', function() {
+                calculateCosts();
+            });
+            
+            orderQuantityInput.addEventListener('change', function() {
+                calculateCosts();
+            });
+            
+            salePriceInput.addEventListener('change', function() {
+                calculateCosts();
+            });
+            
+            calculateButton.addEventListener('click', function() {
+                calculateCosts();
+            });
+            
+            updateFormVisibility();
+            calculateCosts();
+        });
+    </script>
+</body>
+</html>
