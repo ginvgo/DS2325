@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI计算器 | 简约工具</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" href="../assets/images/logo.svg">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="../assets/images/logo.svg" alt="网站Logo">
+                <span>简约工具</span>
+            </div>
+            <nav>
+                <a href="../articles/">文章</a>
+                <a href="../tools/">工具</a>
+                <a href="../calculators/" class="active">计算器</a>
+                <a href="../resources/">资源</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container calculator-container">
+        <h1>BMI计算器</h1>
+        
+        <div class="calculator">
+            <div class="input-group">
+                <label for="height">身高 (cm):</label>
+                <input type="number" id="height" placeholder="请输入身高">
+            </div>
+            
+            <div class="input-group">
+                <label for="weight">体重 (kg):</label>
+                <input type="number" id="weight" placeholder="请输入体重">
+            </div>
+            
+            <button id="calculate" class="button primary">计算BMI</button>
+            
+            <div id="result" class="result">
+                <h3>您的BMI: <span id="bmi-value">--</span></h3>
+                <p id="bmi-category">请输入身高和体重进行计算</p>
+            </div>
+        </div>
+        
+        <div class="calculator-info">
+            <h2>关于BMI</h2>
+            <p>身体质量指数(BMI)是衡量体重与身高比例的常用指标。</p>
+            
+            <h3>BMI分类标准:</h3>
+            <ul>
+                <li>低于18.5: 体重过轻</li>
+                <li>18.5-24.9: 正常范围</li>
+                <li>25.0-29.9: 超重</li>
+                <li>30.0及以上: 肥胖</li>
+            </ul>
+        </div>
+        
+        <a href="../calculators/" class="button">返回计算器列表</a>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 简约工具. 保留所有权利.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('calculate').addEventListener('click', function() {
+            const height = parseFloat(document.getElementById('height').value) / 100; // 转换为米
+            const weight = parseFloat(document.getElementById('weight').value);
+            
+            if (height && weight) {
+                const bmi = (weight / (height * height)).toFixed(1);
+                document.getElementById('bmi-value').textContent = bmi;
+                
+                let category = '';
+                if (bmi < 18.5) {
+                    category = '体重过轻';
+                } else if (bmi >= 18.5 && bmi <= 24.9) {
+                    category = '正常范围';
+                } else if (bmi >= 25.0 && bmi <= 29.9) {
+                    category = '超重';
+                } else {
+                    category = '肥胖';
+                }
+                
+                document.getElementById('bmi-category').textContent = category;
+            } else {
+                alert('请输入有效的身高和体重值');
+            }
+        });
+    </script>
+</body>
+</html>
