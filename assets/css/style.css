@@ -224,3 +224,83 @@ footer {
         justify-content: center;
     }
 }
+/* 新增夜间模式样式 */
+:root {
+    --primary-color: #5e6ad2;
+    --primary-hover: #4a58c8;
+    --text-color: #2d3748;
+    --text-light: #718096;
+    --bg-color: #ffffff;
+    --bg-secondary: #f7fafc;
+    --border-color: #e2e8f0;
+    --card-bg: #ffffff;
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --radius: 6px;
+}
+
+[data-theme="dark"] {
+    --primary-color: #7c8af5;
+    --primary-hover: #6a7af2;
+    --text-color: #e2e8f0;
+    --text-light: #a0aec0;
+    --bg-color: #1a202c;
+    --bg-secondary: #2d3748;
+    --border-color: #4a5568;
+    --card-bg: #2d3748;
+}
+
+/* 新增头部按钮样式 */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.home-button, .theme-toggle {
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.home-button:hover, .theme-toggle:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+/* 更新卡片样式 */
+.content-card {
+    background-color: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 25px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border-color);
+}
+
+.content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.content-card h2 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+}
+
+.content-card p {
+    margin-bottom: 20px;
+    color: var(--text-light);
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
