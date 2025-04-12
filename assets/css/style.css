@@ -57,6 +57,8 @@ body {
   max-width: 1200px;              /* 最大宽度限制 */
   margin: 0 auto;                 /* 水平居中 */
   padding: 0 20px;                /* 左右内边距 */
+  display: flex;
+  align-items: center;  /* 确保垂直居中 */
 }
 
 /* ==================== 头部样式 ==================== */
