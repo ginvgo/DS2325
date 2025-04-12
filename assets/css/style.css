@@ -371,3 +371,96 @@ footer {
 .content-card:hover img {
     transform: scale(1.1);
 }
+/* 底部信息栏 */
+.site-footer {
+  background-color: var(--bg-color);
+  border-top: 1px solid var(--border-color);
+  padding: 40px 0 20px;
+  color: var(--text-light);
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-logo img {
+  opacity: 0.8;
+  margin-bottom: 15px;
+}
+
+.copyright {
+  font-size: 0.85rem;
+  margin-bottom: 15px;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.footer-nav a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.footer-nav a:hover {
+  color: var(--primary-color);
+}
+
+.social-links {
+  display: flex;
+  gap: 15px;
+  margin: 10px 0 15px;
+}
+
+.social-links a {
+  transition: transform 0.3s;
+}
+
+.social-links a:hover {
+  transform: translateY(-3px);
+}
+
+.qr-section {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.qr-code {
+  text-align: center;
+}
+
+.qr-code p {
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
+
+/* 夜间模式适配 */
+[data-theme="dark"] .site-footer {
+  background-color: var(--bg-secondary);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .qr-section {
+    justify-content: flex-start;
+  }
+}
