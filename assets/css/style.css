@@ -547,3 +547,97 @@ header .container {
 .email-btn:hover {
   background: var(--border-color);
 }，
+/* ===== 搜索框样式 ===== */
+.search-container {
+    flex: 1;  /* 占据剩余空间 */
+    margin: 0 30px;
+    position: relative;
+    max-width: 500px;
+}
+
+.search-form {
+    position: relative;
+    display: flex;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 15px;
+    padding-right: 35px;
+    border: 2px solid var(--border-color);
+    border-radius: 20px;
+    font-size: 0.95rem;
+    background-color: var(--bg-secondary);
+    transition: all 0.3s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(94, 106, 210, 0.2);
+}
+
+.search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-light);
+    padding: 5px;
+}
+
+.search-button:hover {
+    color: var(--primary-color);
+}
+
+.search-icon {
+    display: block;
+}
+
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    margin-top: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+
+.search-result-item {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.search-result-item:hover {
+    background-color: var(--bg-secondary);
+}
+
+/* 夜间模式适配 */
+[data-theme="dark"] .search-input {
+    background-color: var(--bg-secondary);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .search-container {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+        margin: 15px 0 0;
+    }
+    
+    .container {
+        flex-wrap: wrap;
+    }
+}
