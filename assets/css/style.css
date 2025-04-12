@@ -342,7 +342,7 @@ header .container {
 .contact-card h3 {
   color: var(--primary-color);
   margin-bottom: 4px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .footer-copyright {
@@ -496,9 +496,9 @@ header .container {
 }
 
 .highlight-text {
-  font-size: 1.2rem;
+  font-size: 0.9rem;
   color: var(--primary-color);
-  margin: 15px 0;
+  margin: 10px 0;
   word-break: break-all;
 }
 
@@ -506,15 +506,15 @@ header .container {
   display: flex;
   gap: 10px;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .copy-btn, .email-btn {
-  padding: 8px 20px;
+  padding: 6px 15px;
   border-radius: 20px;
   border: none;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   transition: all 0.3s;
 }
 
