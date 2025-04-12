@@ -305,75 +305,22 @@ header .container {
 }
 
 .footer-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  grid-template-columns: 1fr auto 1fr; /* 魔法三栏 */
 }
 
-.footer-section {
+.footer-section:nth-child(1) {
+  text-align: left;
+}
+
+.footer-section:nth-child(2) {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  padding: 0 40px;
 }
 
-.footer-logo img {
-  opacity: 0.8;
-  margin-bottom: 15px;
-}
-
-.copyright {
-  font-size: 0.85rem;
-  margin-bottom: 15px;
-}
-
-.footer-nav {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-}
-
-.footer-nav a {
-  color: var(--text-light);
-  text-decoration: none;
-  font-size: 0.9rem;
-  transition: color 0.2s;
-}
-
-.footer-nav a:hover {
-  color: var(--primary-color);
-}
-
-/* 社交媒体链接 */
-.social-links {
-  display: flex;
-  gap: 15px;
-  margin: 10px 0 15px;
-}
-
-.social-links a {
-  transition: transform 0.3s;
-}
-
-.social-links a:hover {
-  transform: translateY(-3px);
-}
-
-/* 二维码区域 */
-.qr-section {
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.qr-code {
-  text-align: center;
-}
-
-.qr-code p {
-  font-size: 0.8rem;
-  margin-top: 8px;
+.footer-section:nth-child(3) {
+  text-align: right;
 }
 
 /* ==================== 响应式设计 ==================== */
