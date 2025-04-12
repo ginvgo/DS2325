@@ -296,111 +296,70 @@ header .container {
   transform: scale(1.1);
 }
 
-/* ==================== 底部样式 ==================== */
+/* ===== 联系栏样式 ===== */
 .site-footer {
-  background-color: var(--bg-color);
-  border-top: 1px solid var(--border-color);
-  padding: 50px 0 60px; /* 下内边距为版权信息留空间 */
-  color: var(--text-light);
+  background: var(--bg-color);
+  padding: 50px 0 0;
   position: relative;
+  text-align: center;
+}
+
+.contact-title {
+  color: var(--text-color);
+  margin-bottom: 30px;
+  font-size: 1.5rem;
+  letter-spacing: 1px;
 }
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 40px;
-  max-width: 1000px;
-  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  max-width: 800px;
+  margin: 0 auto 60px;
   padding: 0 20px;
 }
 
 .contact-card {
   background: var(--card-bg);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: var(--shadow);
-  text-align: center;
-  transition: transform 0.3s;
+  border-radius: 10px;
+  padding: 25px 15px;
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
 .contact-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.contact-card img {
+  margin-bottom: 15px;
 }
 
 .contact-card h3 {
-  font-size: 1.1rem;
-  margin-bottom: 20px;
   color: var(--primary-color);
+  margin-bottom: 8px;
 }
 
-.qr-code img {
-  width: 120px;
-  height: 120px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-
-.contact-method {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-}
-
-.contact-method img {
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-}
-
-.contact-method p {
-  font-size: 0.95rem;
-  margin: 5px 0;
-}
-
-.contact-method p span {
-  color: var(--primary-color);
-  font-weight: 500;
-}
-
-.email-link {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 6px 15px;
-  background: var(--primary-color);
-  color: white;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  text-decoration: none;
-  transition: all 0.3s;
-}
-
-.email-link:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-}
-
-/* 版权信息 */
 .footer-copyright {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
   background: var(--bg-secondary);
-  padding: 15px 0;
-  text-align: center;
-  font-size: 0.85rem;
+  padding: 15px;
+  font-size: 0.9rem;
 }
 
-.footer-copyright a {
-  color: var(--text-light);
-  margin: 0 8px;
-  text-decoration: none;
-  transition: color 0.2s;
+/* ===== 弹窗样式 ===== */
+.popup-overlay {
+  /* 保持之前提供的弹窗样式不变 */
 }
 
-.footer-copyright a:hover {
-  color: var(--primary-color);
+/* ===== 夜间模式适配 ===== */
+[data-theme="dark"] .contact-card {
+  background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .footer-copyright {
+  background: rgba(0,0,0,0.2);
 }
 
 /* ==================== 响应式调整 ==================== */
