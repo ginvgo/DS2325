@@ -299,32 +299,32 @@ header .container {
 /* ===== 联系栏样式 ===== */
 .site-footer {
   background: var(--bg-color);
-  padding: 20px 0 0;
+  padding: 18px 0 0;
   position: relative;
   text-align: center;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
 }
 
 .contact-title {
   color: var(--text-color);
-  margin-bottom: 10px;
-  font-size: 1.2rem;
-  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  letter-spacing: 0.4px;
 }
 
 .contact-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 15px;
+  gap: 12px;
   max-width: 800px;
   margin: 0 auto 40px;
-  padding: 0 15px;
+  padding: 0 10px;
 }
 
 .contact-card {
   background: var(--card-bg);
   border-radius: 10px;
-  padding: 15px 8px;
+  padding: 12px 5px;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -335,13 +335,13 @@ header .container {
 }
 
 .contact-card img {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .contact-card h3 {
   color: var(--primary-color);
-  margin-bottom: 5px;
-  font-size: 1rem;
+  margin-bottom: 4px;
+  font-size: 0.8rem;
 }
 
 .footer-copyright {
