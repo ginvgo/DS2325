@@ -642,3 +642,63 @@ header .container {
         flex-wrap: wrap;
     }
 }
+/* 搜索结果显示样式 */
+.search-results {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-color);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    max-height: 70vh;
+    overflow-y: auto;
+    margin-top: 5px;
+    display: none;
+}
+
+.search-result-header {
+    padding: 10px 15px;
+    background-color: var(--bg-secondary);
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 0.9rem;
+    position: sticky;
+    top: 0;
+}
+
+.search-result-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-result-item:hover {
+    background-color: var(--bg-secondary);
+}
+
+.search-result-title {
+    font-weight: 500;
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+.search-result-snippet {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.highlight {
+    background-color: rgba(255, 225, 0, 0.3);
+    padding: 0 2px;
+    border-radius: 2px;
+}
+
+.no-results {
+    color: var(--text-light);
+    text-align: center;
+    padding: 20px;
+}
