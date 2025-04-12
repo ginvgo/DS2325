@@ -702,3 +702,9 @@ header .container {
     text-align: center;
     padding: 20px;
 }
+.upload-date {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #888;
+}
