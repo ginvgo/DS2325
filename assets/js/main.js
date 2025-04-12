@@ -24,3 +24,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+// 弹窗切换函数
+function togglePopup(popupId) {
+  const popup = document.getElementById(popupId);
+  popup.classList.toggle('active');
+  
+  // 禁用/启用页面滚动
+  document.body.style.overflow = popup.classList.contains('active') ? 'hidden' : '';
+}
+
+// 复制到剪贴板功能
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    alert('已复制到剪贴板: ' + text);
+  }).catch(err => {
+    console.error('复制失败: ', err);
+    // 兼容方案
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    alert('已复制到剪贴板');
+  });
+}
+
+// 点击弹窗外部关闭
+document.querySelectorAll('.popup-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) {
+      togglePopup(this.id);
+    }
+  });
+});
