@@ -6,10 +6,38 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <!-- 复用相同的header -->
-    <header>
-        <!-- 与主站相同的header代码 -->
-    </header>
+   <header>
+    <div class="container">
+        <div class="logo">
+            <img src="assets/images/logo.png" alt="网站Logo">
+            <span>Ginv's Amazon</span>
+        </div>
+        <div class="search-container">
+            <form class="search-form" action="/search" method="GET">
+                <input type="text" 
+                       class="search-input" 
+                       placeholder="输入搜索内容..." 
+                       aria-label="网站搜索"
+                       autocomplete="off">
+                <button type="submit" class="search-button" aria-label="执行搜索">
+                    <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18">
+                        <path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/>
+                    </svg>
+                </button>
+                <div class="search-results"></div>
+            </form>
+        </div>
+        <nav>
+            <a href="articles/">文章</a>
+            <a href="tools/">工具</a>
+            <a href="calculators/">计算器</a>
+            <a href="resources/">资源</a>
+        </nav>
+        <div class="header-actions">
+            <button id="theme-toggle" class="theme-toggle">🌙 </button>
+        </div>
+    </div>
+</header>
  <header>
     <div class="container">
         <div class="logo">
