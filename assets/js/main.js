@@ -55,4 +55,28 @@ document.querySelectorAll('.popup-overlay').forEach(popup => {
   });
 });
 
- 
+ document.addEventListener("DOMContentLoaded", function () {
+    const repoOwner = "你的GitHub用户名";
+    const repoName = "你的仓库名";
+    const branch = "main"; // 或者 master
+
+    document.querySelectorAll(".content-card").forEach(card => {
+      const filePath = card.getAttribute("data-path");
+      const dateElem = card.querySelector(".upload-date");
+
+      fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/commits?path=${filePath}&sha=${branch}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.length > 0) {
+            const dateStr = new Date(data[0].commit.committer.date).toISOString().split("T")[0];
+            dateElem.textContent = `上传日期：${dateStr}`;
+          } else {
+            dateElem.textContent = "无法获取上传时间";
+          }
+        })
+        .catch(err => {
+          dateElem.textContent = "加载失败";
+          console.error(err);
+        });
+    });
+  }); 
