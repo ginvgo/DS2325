@@ -306,7 +306,7 @@ header .container {
 
 .contact-title {
   color: var(--text-color);
-  margin-bottom: 30px;
+  margin-bottom: 15px;
   font-size: 1.5rem;
   letter-spacing: 1px;
 }
@@ -314,16 +314,16 @@ header .container {
 .contact-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 25px;
+  gap: 15px;
   max-width: 800px;
-  margin: 0 auto 60px;
-  padding: 0 20px;
+  margin: 0 auto 40px;
+  padding: 0 15px;
 }
 
 .contact-card {
   background: var(--card-bg);
   border-radius: 10px;
-  padding: 25px 15px;
+  padding: 20px 10px;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -339,7 +339,7 @@ header .container {
 
 .contact-card h3 {
   color: var(--primary-color);
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .footer-copyright {
