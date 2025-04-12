@@ -56,8 +56,8 @@ document.querySelectorAll('.popup-overlay').forEach(popup => {
 });
 
  document.addEventListener("DOMContentLoaded", function () {
-    const repoOwner = "你的GitHub用户名";
-    const repoName = "你的仓库名";
+    const repoOwner = "ginvgo";
+    const repoName = "DS2325";
     const branch = "main"; // 或者 master
 
     document.querySelectorAll(".content-card").forEach(card => {
