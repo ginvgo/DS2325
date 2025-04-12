@@ -67,79 +67,7 @@
         </section>
     </main>
 
-<footer class="site-footer">
-  <div class="footer-container">
-    <!-- 联系信息区域 -->
-    <div class="contact-grid">
-      <!-- 微信公众号区块 -->
-      <div class="contact-card">
-        <h3>微信公众号</h3>
-        <div class="qr-code" onclick="togglePopup('wechat-popup')">
-          <img src="assets/images/qr-wechat.png" alt="微信公众号二维码" width="120">
-          <p>点击查看二维码</p>
-        </div>
-      </div>
-      
-      <!-- 微信联系方式 -->
-      <div class="contact-card">
-        <h3>微信联系</h3>
-        <div class="contact-method" onclick="togglePopup('wechat-id-popup')">
-          <img src="assets/images/icon-wechat.png" alt="微信图标" width="40">
-          <p>点击显示微信号</p>
-        </div>
-      </div>
-      
-      <!-- 电子邮箱 -->
-      <div class="contact-card">
-        <h3>电子邮箱</h3>
-        <div class="contact-method" onclick="togglePopup('email-popup')">
-          <img src="assets/images/icon-email.png" alt="邮箱图标" width="40">
-          <p>点击显示邮箱</p>
-        </div>
-      </div>
-    </div>
-    
-    <!-- 版权信息 -->
-    <div class="footer-copyright">
-      <p>© 2023 简约工具. 保留所有权利.</p>
-    </div>
-  </div>
 
-  <!-- 微信弹窗 -->
-  <div id="wechat-popup" class="popup-overlay">
-    <div class="popup-content">
-      <span class="close-btn" onclick="togglePopup('wechat-popup')">&times;</span>
-      <h3>微信公众号</h3>
-      <img src="assets/images/qr-wechat.png" alt="微信公众号二维码" width="180">
-      <p>扫码关注获取最新资讯</p>
-    </div>
-  </div>
-
-  <!-- 微信号弹窗 -->
-  <div id="wechat-id-popup" class="popup-overlay">
-    <div class="popup-content">
-      <span class="close-btn" onclick="togglePopup('wechat-id-popup')">&times;</span>
-      <h3>微信联系</h3>
-      <img src="assets/images/icon-wechat.png" alt="微信图标" width="60">
-      <p class="highlight-text">SimpleTools123</p>
-      <button class="copy-btn" onclick="copyToClipboard('SimpleTools123')">复制微信号</button>
-    </div>
-  </div>
-
-  <!-- 邮箱弹窗 -->
-  <div id="email-popup" class="popup-overlay">
-    <div class="popup-content">
-      <span class="close-btn" onclick="togglePopup('email-popup')">&times;</span>
-      <h3>电子邮箱</h3>
-      <img src="assets/images/icon-email.png" alt="邮箱图标" width="60">
-      <p class="highlight-text">contact@simpletools.com</p>
-      <div class="popup-btns">
-        <button class="copy-btn" onclick="copyToClipboard('contact@simpletools.com')">复制邮箱</button>
-        <a href="mailto:contact@simpletools.com" class="email-btn">发送邮件</a>
-      </div>
-    </div>
-  </div>
-</footer>
 
     <script src="assets/js/main.js"></script>
 </body>
