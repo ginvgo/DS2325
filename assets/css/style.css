@@ -299,16 +299,17 @@ header .container {
 /* ===== 联系栏样式 ===== */
 .site-footer {
   background: var(--bg-color);
-  padding: 50px 0 0;
+  padding: 20px 0 0;
   position: relative;
   text-align: center;
+  font-size: 0.85rem;
 }
 
 .contact-title {
   color: var(--text-color);
-  margin-bottom: 15px;
-  font-size: 1.5rem;
-  letter-spacing: 1px;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
 }
 
 .contact-grid {
@@ -323,7 +324,7 @@ header .container {
 .contact-card {
   background: var(--card-bg);
   border-radius: 10px;
-  padding: 20px 10px;
+  padding: 15px 8px;
   cursor: pointer;
   transition: all 0.3s;
 }
@@ -340,6 +341,7 @@ header .container {
 .contact-card h3 {
   color: var(--primary-color);
   margin-bottom: 5px;
+  font-size: 1rem;
 }
 
 .footer-copyright {
