@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索结果 - Ginv's Amazon</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- 复用相同的header -->
+    <header>
+        <!-- 与主站相同的header代码 -->
+    </header>
+
+    <main class="container">
+        <h1>搜索结果</h1>
+        <div id="search-results-page"></div>
+    </main>
+
+    <script src="assets/js/search.js"></script>
+    <script>
+        // 专门用于搜索结果页的逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchResultsContainer = document.getElementById('search-results-page');
+            const urlParams = new URLSearchParams(window.location.search);
+            const query = urlParams.get('q');
+            
+            if (query) {
+                const results = performSearch(query);
+                
+                if (results.length > 0) {
+                    const grouped = results.reduce((acc, item) => {
+                        if (!acc[item.type]) acc[item.type] = [];
+                        acc[item.type].push(item);
+                        return acc;
+                    }, {});
+                    
+                    for (const [type, items] of Object.entries(grouped)) {
+                        const section = document.createElement('section');
+                        section.innerHTML = `<h2>${type}</h2>`;
+                        
+                        items.forEach(item => {
+                            const resultItem = document.createElement('div');
+                            resultItem.className = 'search-result-card';
+                            resultItem.innerHTML = `
+                                <h3><a href="${item.url}">${highlightMatches(item.title, query)}</a></h3>
+                                <p class="search-snippet">${getContentSnippet(item.content, query)}</p>
+                            `;
+                            section.appendChild(resultItem);
+                        });
+                        
+                        searchResultsContainer.appendChild(section);
+                    }
+                } else {
+                    searchResultsContainer.innerHTML = `
+                        <div class="no-results">
+                            <p>没有找到"${escapeHtml(query)}"的相关结果</p>
+                            <p>尝试使用不同的关键词搜索</p>
+                        </div>
+                    `;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
