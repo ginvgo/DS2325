@@ -54,3 +54,30 @@ document.querySelectorAll('.popup-overlay').forEach(popup => {
     if (e.target === this) togglePopup(this.id);
   });
 });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll('.content-card');
+
+    cards.forEach(card => {
+      const filePath = card.getAttribute('data-file');
+      const dateSpan = card.querySelector('.upload-date');
+
+      fetch(`../${filePath}`, { method: 'HEAD' })  // 注意：相对路径从当前 index.html 出发
+        .then(response => {
+          const lastModified = response.headers.get('Last-Modified');
+          if (lastModified) {
+            const date = new Date(lastModified);
+            const formatted = date.getFullYear() + '-' +
+              String(date.getMonth() + 1).padStart(2, '0') + '-' +
+              String(date.getDate()).padStart(2, '0');
+            dateSpan.textContent = `上传日期：${formatted}`;
+          } else {
+            dateSpan.textContent = '上传日期未知';
+          }
+        })
+        .catch(err => {
+          dateSpan.textContent = '获取失败';
+          console.error(`获取 ${filePath} 日期失败`, err);
+        });
+    });
+  });
