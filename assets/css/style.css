@@ -274,8 +274,8 @@ body {
 }
 
 .qr-card img {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   margin-bottom: 15px;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
