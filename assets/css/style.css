@@ -296,31 +296,138 @@ header .container {
   transform: scale(1.1);
 }
 
-/* ==================== 页脚样式 ==================== */
+/* ==================== 底部样式 ==================== */
 .site-footer {
   background-color: var(--bg-color);
   border-top: 1px solid var(--border-color);
-  padding: 40px 0 20px;
+  padding: 50px 0 60px; /* 下内边距为版权信息留空间 */
   color: var(--text-light);
+  position: relative;
 }
 
-.footer-container {
-  grid-template-columns: 1fr auto 1fr; /* 魔法三栏 */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-.footer-section:nth-child(1) {
-  text-align: left;
+.contact-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: transform 0.3s;
 }
 
-.footer-section:nth-child(2) {
+.contact-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.contact-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.qr-code img {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.contact-method {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 40px;
+  gap: 10px;
 }
 
-.footer-section:nth-child(3) {
-  text-align: right;
+.contact-method img {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.contact-method p {
+  font-size: 0.95rem;
+  margin: 5px 0;
+}
+
+.contact-method p span {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.email-link {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 15px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.email-link:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+/* 版权信息 */
+.footer-copyright {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-secondary);
+  padding: 15px 0;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.footer-copyright a {
+  color: var(--text-light);
+  margin: 0 8px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-copyright a:hover {
+  color: var(--primary-color);
+}
+
+/* ==================== 响应式调整 ==================== */
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+  
+  .contact-card {
+    padding: 20px;
+  }
+  
+  .footer-copyright p {
+    line-height: 1.5;
+  }
+}
+
+/* 夜间模式适配 */
+[data-theme="dark"] {
+  .contact-card {
+    background: var(--bg-secondary);
+  }
+  
+  .footer-copyright {
+    background: rgba(0,0,0,0.2);
+  }
 }
 
 /* ==================== 响应式设计 ==================== */
@@ -383,4 +490,93 @@ header .container {
 .home-button:hover, .theme-toggle:hover {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
+}
+/* ==================== 弹窗样式 ==================== */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.popup-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.popup-content {
+  background: var(--bg-color);
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  cursor: pointer;
+  color: var(--text-light);
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--primary-color);
+}
+
+.highlight-text {
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin: 15px 0;
+  word-break: break-all;
+}
+
+.popup-btns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.copy-btn, .email-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
+
+.copy-btn {
+  background: var(--primary-color);
+  color: white;
+}
+
+.copy-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.email-btn {
+  background: var(--bg-secondary);
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+.email-btn:hover {
+  background: var(--border-color);
 }
