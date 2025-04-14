@@ -308,8 +308,8 @@ header .container {
 
 .contact-title {
   color: var(--text-color);
-  margin-bottom: 8px;
-  font-size: 1.2rem;
+  margin-bottom: 9px;
+  font-size: 1.0rem;
   letter-spacing: 0.4px;
 }
 
