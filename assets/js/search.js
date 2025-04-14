@@ -229,3 +229,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+// 在表单提交处理部分修改为：
+searchForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const query = searchInput.value.trim();
+    if (query) {
+        // 跳转到search.html
+        window.location.href = `search.html?q=${encodeURIComponent(query)}`;
+    }
+});
