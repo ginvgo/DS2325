@@ -510,26 +510,15 @@ header .container {
 }
 
 .copy-btn, .email-btn {
-  padding: 6px 15px;
-  border-radius: 20px;
+  padding: 4px 10px;
+  border-radius: 15px;
   border: none;
   cursor: pointer;
   font-size: 0.8rem;
   transition: all 0.3s;
 }
 
- .copy-btn {
-      padding: 10px 20px;
-      background-color: #f5f5f5;
-      color: #333;
-      border: 0.8px solid #ddd;
-      border-radius: 8px;
-      font-size: 10px;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      transition: background-color 0.3s, transform 0.2s;
-    }
-
+ 
     .copy-btn:hover {
       background-color: #eaeaea;
       transform: translateY(-1px);
