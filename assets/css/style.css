@@ -496,9 +496,9 @@ header .container {
 }
 
 .highlight-text {
-  font-size: 0.9rem;
+  font-size: 1.2rem;
   color: var(--primary-color);
-  margin: 10px 0;
+  margin: 20px 0;
   word-break: break-all;
 }
 
