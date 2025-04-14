@@ -504,7 +504,7 @@ header .container {
 
 .popup-btns {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   justify-content: center;
   margin-top: 15px;
 }
