@@ -1,39 +1,52 @@
+// search.js - 添加到您的JS文件中
 document.addEventListener('DOMContentLoaded', function() {
-    // 获取DOM元素
+    // 获取搜索相关元素
     const searchForm = document.querySelector('.search-form');
     const searchInput = document.querySelector('.search-input');
     const searchResults = document.querySelector('.search-results');
     let searchDebounce;
 
-    // 初始化搜索数据
+    // 全站可搜索内容的数据结构
     const searchData = {
-        articles: { name: '文章', items: [] },
-        tools: { name: '工具', items: [] },
-        calculators: { name: '计算器', items: [] },
-        resources: { name: '资源', items: [] }
+        'articles': {
+            name: '文章',
+            items: []
+        },
+        'tools': {
+            name: '工具', 
+            items: []
+        },
+        'calculators': {
+            name: '计算器',
+            items: []
+        },
+        'resources': {
+            name: '资源',
+            items: []
+        }
     };
 
-    // 收集全站内容
+    // 初始化：收集全站可搜索内容
     function initSearch() {
-        // 收集文章
+        // 收集文章内容
         document.querySelectorAll('article').forEach(article => {
             const title = article.querySelector('h2, h3')?.textContent || '无标题';
             searchData.articles.items.push({
                 title: title,
                 content: article.textContent,
-                url: article.querySelector('a')?.href || window.location.pathname,
-                type: 'articles'
+                url: article.querySelector('a')?.href || '#',
+                type: '文章'
             });
         });
 
-        // 收集工具
+        // 收集工具卡片
         document.querySelectorAll('.tool-card, .feature-card').forEach(card => {
             const title = card.querySelector('h3, h2')?.textContent || '无标题';
             searchData.tools.items.push({
                 title: title,
                 content: card.textContent,
                 url: card.href || card.querySelector('a')?.href || '#',
-                type: 'tools'
+                type: '工具'
             });
         });
 
@@ -44,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: title,
                 content: calc.textContent,
                 url: calc.querySelector('a')?.href || '#',
-                type: 'calculators'
+                type: '计算器'
             });
         });
 
@@ -55,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 title: title,
                 content: res.textContent,
                 url: res.querySelector('a')?.href || '#',
-                type: 'resources'
+                type: '资源'
             });
         });
     }
@@ -65,44 +78,52 @@ document.addEventListener('DOMContentLoaded', function() {
         const results = [];
         const lowerQuery = query.toLowerCase();
         
-        Object.values(searchData).forEach(category => {
-            category.items.forEach(item => {
+        // 在所有分类中搜索
+        for (const [type, data] of Object.entries(searchData)) {
+            data.items.forEach(item => {
                 if (item.title.toLowerCase().includes(lowerQuery) || 
                     item.content.toLowerCase().includes(lowerQuery)) {
                     results.push({
                         ...item,
-                        type: category.name
+                        type: data.name
                     });
                 }
             });
-        });
+        }
         
         return results;
     }
 
-    // 显示下拉结果
-    function showDropdownResults(results) {
+    // 显示搜索结果
+    function showResults(results) {
         searchResults.innerHTML = '';
         
         if (results.length > 0) {
+            // 按类型分组
             const grouped = results.reduce((acc, item) => {
                 if (!acc[item.type]) acc[item.type] = [];
                 acc[item.type].push(item);
                 return acc;
             }, {});
             
+            // 渲染分组结果
             for (const [type, items] of Object.entries(grouped)) {
                 const groupHeader = document.createElement('div');
                 groupHeader.className = 'search-result-header';
                 groupHeader.textContent = type;
                 searchResults.appendChild(groupHeader);
                 
-                items.slice(0, 3).forEach(item => { // 每类最多显示3条
+                items.forEach(item => {
                     const resultItem = document.createElement('div');
                     resultItem.className = 'search-result-item';
+                    
+                    // 高亮匹配文本
+                    const highlightedTitle = highlightMatches(item.title, searchInput.value);
+                    const snippet = getContentSnippet(item.content, searchInput.value);
+                    
                     resultItem.innerHTML = `
-                        <div class="search-result-title">${highlightMatches(item.title, searchInput.value)}</div>
-                        <div class="search-result-snippet">${getContentSnippet(item.content, searchInput.value)}</div>
+                        <div class="search-result-title">${highlightedTitle}</div>
+                        <div class="search-result-snippet">${snippet}</div>
                     `;
                     resultItem.addEventListener('click', () => {
                         window.location.href = item.url;
@@ -121,91 +142,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 显示全屏结果
-    function showFullPageResults(results, query) {
-        // 创建遮罩层
-        const overlay = document.createElement('div');
-        overlay.className = 'search-overlay';
-        
-        // 创建结果容器
-        const resultsContainer = document.createElement('div');
-        resultsContainer.className = 'search-full-results';
-        
-        // 关闭按钮
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'close-search';
-        closeBtn.innerHTML = '&times;';
-        closeBtn.addEventListener('click', () => {
-            document.body.removeChild(overlay);
-            document.body.style.overflow = '';
-        });
-        
-        // 标题
-        const title = document.createElement('h2');
-        title.className = 'search-results-title';
-        title.textContent = `"${query}"的搜索结果 (${results.length}条)`;
-        
-        // 构建结果
-        if (results.length > 0) {
-            const grouped = results.reduce((acc, item) => {
-                if (!acc[item.type]) acc[item.type] = [];
-                acc[item.type].push(item);
-                return acc;
-            }, {});
-            
-            for (const [type, items] of Object.entries(grouped)) {
-                const section = document.createElement('section');
-                section.innerHTML = `<h3>${type} (${items.length})</h3>`;
-                
-                items.forEach(item => {
-                    const resultItem = document.createElement('div');
-                    resultItem.className = 'full-result-item';
-                    resultItem.innerHTML = `
-                        <h4><a href="${item.url}">${highlightMatches(item.title, query)}</a></h4>
-                        <p class="result-snippet">${getContentSnippet(item.content, query)}</p>
-                    `;
-                    section.appendChild(resultItem);
-                });
-                
-                resultsContainer.appendChild(section);
-            }
-        } else {
-            resultsContainer.innerHTML = `
-                <div class="no-results">
-                    <p>没有找到与"${escapeHtml(query)}"相关的内容</p>
-                    <p>请尝试不同的关键词</p>
-                </div>
-            `;
-        }
-        
-        // 组合元素
-        resultsContainer.prepend(closeBtn, title);
-        overlay.appendChild(resultsContainer);
-        document.body.appendChild(overlay);
-        document.body.style.overflow = 'hidden';
-    }
-
-    // 工具函数
+    // 高亮匹配文本
     function highlightMatches(text, query) {
         if (!query) return escapeHtml(text);
         const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
         return escapeHtml(text).replace(regex, '<span class="highlight">$1</span>');
     }
 
+    // 获取内容片段
     function getContentSnippet(content, query) {
         const lowerContent = content.toLowerCase();
         const lowerQuery = query.toLowerCase();
         const index = lowerContent.indexOf(lowerQuery);
         
         if (index === -1) {
-            return escapeHtml(content.substring(0, 80).trim() + '...');
+            return escapeHtml(content.substring(0, 60) + '...');
         }
         
-        const start = Math.max(0, index - 30);
-        const end = Math.min(content.length, index + query.length + 50);
-        return '...' + highlightMatches(content.substring(start, end).trim(), query) + '...';
+        const start = Math.max(0, index - 20);
+        const end = Math.min(content.length, index + query.length + 40);
+        return '...' + highlightMatches(content.substring(start, end), query) + '...';
     }
 
+    // 安全转义HTML
     function escapeHtml(unsafe) {
         return unsafe
             .replace(/&/g, "&amp;")
@@ -215,14 +174,20 @@ document.addEventListener('DOMContentLoaded', function() {
             .replace(/'/g, "&#039;");
     }
 
+    // 转义正则特殊字符
     function escapeRegex(string) {
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
 
-    // 初始化
+    // 隐藏结果
+    function hideResults() {
+        searchResults.style.display = 'none';
+    }
+
+    // 初始化搜索
     initSearch();
 
-    // 输入事件
+    // 输入事件处理（带防抖）
     searchInput.addEventListener('input', function() {
         clearTimeout(searchDebounce);
         const query = this.value.trim();
@@ -230,10 +195,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (query.length > 1) {
             searchDebounce = setTimeout(() => {
                 const results = performSearch(query);
-                showDropdownResults(results);
+                showResults(results);
             }, 300);
         } else {
-            searchResults.style.display = 'none';
+            hideResults();
         }
     });
 
@@ -242,16 +207,25 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         const query = searchInput.value.trim();
         if (query) {
-            const results = performSearch(query);
-            showFullPageResults(results, query);
-            searchResults.style.display = 'none';
+            window.location.href = `/search.html?q=${encodeURIComponent(query)}`;
         }
     });
 
-    // 点击外部关闭下拉
+    // 点击页面其他区域关闭结果
     document.addEventListener('click', function(e) {
         if (!searchForm.contains(e.target)) {
-            searchResults.style.display = 'none';
+            hideResults();
         }
     });
+
+    // 处理URL中的搜索参数（用于search.html页面）
+    if (window.location.pathname.includes('search.html')) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        if (query) {
+            searchInput.value = query;
+            const results = performSearch(query);
+            showResults(results);
+        }
+    }
 });
