@@ -2,64 +2,195 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>搜索结果 - Ginv's Amazon</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* 搜索页专属样式 */
+        .search-page-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .search-query {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        .results-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .result-group {
+            margin-bottom: 2.5rem;
+        }
+        .result-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .no-results {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-light);
+        }
+    </style>
 </head>
 <body>
     <!-- 复用相同的header -->
     <header>
-        <!-- 与主站相同的header代码 -->
+        <div class="container">
+            <div class="logo">
+                <img src="assets/images/logo.png" alt="网站Logo">
+                <span>Ginv's Amazon</span>
+            </div>
+            
+            <div class="search-container">
+                <form class="search-form" action="search.html" method="GET">
+                    <input type="text" 
+                           class="search-input" 
+                           placeholder="搜索商品、文章..." 
+                           aria-label="网站搜索"
+                           autocomplete="off"
+                           name="q">
+                    <button type="submit" class="search-button" aria-label="执行搜索">
+                        <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18">
+                            <path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+            
+            <nav>
+                <a href="articles/">文章</a>
+                <a href="tools/">工具</a>
+                <a href="calculators/">计算器</a>
+                <a href="resources/">资源</a>
+            </nav>
+            <div class="header-actions">
+                <button id="theme-toggle" class="theme-toggle">🌙</button>
+            </div>
+        </div>
     </header>
 
     <main class="container">
-        <h1>搜索结果</h1>
-        <div id="search-results-page"></div>
+        <div class="search-page-header">
+            <h1>搜索结果</h1>
+            <p>关键词: <span class="search-query" id="search-query"></span></p>
+        </div>
+        
+        <div class="results-container" id="results-container">
+            <!-- 结果将通过JavaScript动态加载 -->
+            <div class="no-results">正在加载搜索结果...</div>
+        </div>
     </main>
 
+    <!-- 复用现有JS -->
     <script src="assets/js/search.js"></script>
+    
+    <!-- 搜索页专属JS -->
     <script>
-        // 专门用于搜索结果页的逻辑
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchResultsContainer = document.getElementById('search-results-page');
-            const urlParams = new URLSearchParams(window.location.search);
-            const query = urlParams.get('q');
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取URL中的搜索词
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        const resultsContainer = document.getElementById('results-container');
+        const queryDisplay = document.getElementById('search-query');
+        
+        if (query) {
+            queryDisplay.textContent = `"${query}"`;
             
-            if (query) {
+            // 从主JS中获取搜索功能
+            if (typeof performSearch === 'function') {
                 const results = performSearch(query);
+                displayResults(results);
+            } else {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">搜索功能初始化失败，请刷新页面</div>
+                `;
+            }
+        } else {
+            resultsContainer.innerHTML = `
+                <div class="no-results">请输入搜索关键词</div>
+            `;
+        }
+        
+        function displayResults(results) {
+            if (results.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="no-results">
+                        没有找到"${escapeHtml(query)}"的相关结果<br>
+                        请尝试不同的关键词
+                    </div>
+                `;
+                return;
+            }
+            
+            // 按类型分组
+            const grouped = results.reduce((acc, item) => {
+                if (!acc[item.type]) acc[item.type] = [];
+                acc[item.type].push(item);
+                return acc;
+            }, {});
+            
+            let resultsHTML = '';
+            
+            // 生成分组HTML
+            for (const [type, items] of Object.entries(grouped)) {
+                resultsHTML += `
+                    <div class="result-group">
+                        <h2>${type} <small>(${items.length})</small></h2>
+                `;
                 
-                if (results.length > 0) {
-                    const grouped = results.reduce((acc, item) => {
-                        if (!acc[item.type]) acc[item.type] = [];
-                        acc[item.type].push(item);
-                        return acc;
-                    }, {});
-                    
-                    for (const [type, items] of Object.entries(grouped)) {
-                        const section = document.createElement('section');
-                        section.innerHTML = `<h2>${type}</h2>`;
-                        
-                        items.forEach(item => {
-                            const resultItem = document.createElement('div');
-                            resultItem.className = 'search-result-card';
-                            resultItem.innerHTML = `
-                                <h3><a href="${item.url}">${highlightMatches(item.title, query)}</a></h3>
-                                <p class="search-snippet">${getContentSnippet(item.content, query)}</p>
-                            `;
-                            section.appendChild(resultItem);
-                        });
-                        
-                        searchResultsContainer.appendChild(section);
-                    }
-                } else {
-                    searchResultsContainer.innerHTML = `
-                        <div class="no-results">
-                            <p>没有找到"${escapeHtml(query)}"的相关结果</p>
-                            <p>尝试使用不同的关键词搜索</p>
+                items.forEach(item => {
+                    resultsHTML += `
+                        <div class="result-item">
+                            <h3>
+                                <a href="${item.url}">${highlightMatches(item.title, query)}</a>
+                            </h3>
+                            <p>${getContentSnippet(item.content, query)}</p>
                         </div>
                     `;
-                }
+                });
+                
+                resultsHTML += `</div>`;
             }
-        });
+            
+            resultsContainer.innerHTML = resultsHTML;
+        }
+        
+        // 复用主JS中的工具函数
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        function highlightMatches(text, query) {
+            if (!query) return escapeHtml(text);
+            const regex = new RegExp(`(${escapeRegex(query)})`, 'gi');
+            return escapeHtml(text).replace(regex, '<span class="highlight">$1</span>');
+        }
+        
+        function getContentSnippet(content, query) {
+            const lowerContent = content.toLowerCase();
+            const lowerQuery = query.toLowerCase();
+            const index = lowerContent.indexOf(lowerQuery);
+            
+            if (index === -1) {
+                return escapeHtml(content.substring(0, 100).trim() + '...');
+            }
+            
+            const start = Math.max(0, index - 40);
+            const end = Math.min(content.length, index + query.length + 60);
+            return '...' + highlightMatches(content.substring(start, end).trim(), query) + '...';
+        }
+        
+        function escapeRegex(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+    });
     </script>
 </body>
 </html>
