@@ -481,6 +481,11 @@ header .container {
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
+.contact-info {
+  font-size: 1.2rem; 
+  margin-bottom: 20px; 
+}
+
 .close-btn {
   position: absolute;
   top: 15px;
