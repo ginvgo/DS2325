@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script>
+    // 获取当前路径
+    const path = window.location.pathname;
+
+    // 处理路径，如 "/about/" -> "about", "/contact" -> "contact"
+    let page = path.replace(/^\/+|\/+$/g, ""); // 去掉首尾斜杠
+
+    // 若为空，则跳转主页
+    if (!page) {
+      window.location.href = "/index.html";
+    } else {
+      // 跳转到相应的 .html 文件
+      window.location.href = `/${page}.html`;
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
+</html>
+
