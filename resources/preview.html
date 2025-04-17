@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>资源预览</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>资源预览</h1>
+    <div id="file-info">
+      <!-- 文件信息将在这里填充 -->
+    </div>
+    <div>
+      <a id="download-btn" class="button" href="#" download>下载文件</a>
+    </div>
+  </main>
+
+  <script>
+    const GITHUB_USER = "ginvgo";  // ✅ 改为你的 GitHub 用户名
+    const GITHUB_REPO = "DS2325";         // ✅ 改为你的 GitHub 仓库名
+    const GITHUB_FOLDER = "resource";
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const fileName = urlParams.get("file");
+
+    if (!fileName) {
+      document.getElementById("file-info").innerText = "未指定文件。";
+    } else {
+      const fileUrl = `https://raw.githubusercontent.com/${GITHUB_USER}/${GITHUB_REPO}/main/${GITHUB_FOLDER}/${fileName}`;
+      
+      document.getElementById("file-info").innerHTML = `
+        <p><strong>文件名：</strong> ${fileName}</p>
+        <p><strong>文件路径：</strong> ${GITHUB_FOLDER}/${fileName}</p>
+      `;
+
+      const downloadLink = document.getElementById("download-btn");
+      downloadLink.href = fileUrl;
+      downloadLink.setAttribute("download", fileName); // 重要
+    }
+  </script>
+</body>
+</html>
