@@ -542,3 +542,17 @@ header .container {
 .email-btn:hover {
   background: var(--border-color);
 }，
+
+/* ==================== 资源预览页下载按钮 ==================== */
+.download-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007acc;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+.download-button:hover {
+  background-color: #005a99;
+}
+
