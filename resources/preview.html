@@ -2,17 +2,122 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>资源预览</title>
   <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="icon" href="../assets/images/logo.png" />
 </head>
 <body>
-  <main class="container">
-    <h1 id="file-name">文件预览</h1>
-    <div id="file-info"></div>
-    <div id="file-preview" style="margin-top: 1em;"></div>
-    <a id="download-btn" href="#" download class="download-button">下载文件</a>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="网站Logo" />
+        <span>456</span>
+      </div>
+      <nav>
+        <a href="../articles/">文章</a>
+        <a href="../tools/">工具</a>
+        <a href="../calculators/">计算器</a>
+        <a href="../resources/" class="active">资源</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" style="margin-top: 40px;">
+    <h1>资源预览</h1>
+    <div id="preview" class="preview-box">
+      <!-- 资源信息将通过 JS 动态加载 -->
+    </div>
   </main>
 
-  <script src="../assets/js/resource-preview.js"></script>
+  <footer class="site-footer">
+    <div class="footer-container">
+      <h2 class="contact-title">C</h2>
+    </div>
+  </footer>
+
+  <script>
+    const username = "ginvgo";
+    const repo = "DS2325";
+    const folder = "resource";
+
+    function getFileType(filename) {
+      return filename.split('.').pop().toUpperCase();
+    }
+
+    function formatSize(size) {
+      if (!size) return '0 B';
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let i = 0;
+      while (size >= 1024 && i < units.length - 1) {
+        size /= 1024;
+        i++;
+      }
+      return size.toFixed(1) + ' ' + units[i];
+    }
+
+    function formatDate(isoDate) {
+      if (!isoDate) return '未知';
+      const date = new Date(isoDate);
+      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+    }
+
+    async function loadPreview() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const fileName = urlParams.get("file");
+      const previewBox = document.getElementById("preview");
+
+      if (!fileName) {
+        previewBox.innerHTML = "<p>未指定资源文件。</p>";
+        return;
+      }
+
+      const fileUrl = `https://raw.githubusercontent.com/${username}/${repo}/main/${folder}/${fileName}`;
+
+      // 获取文件信息
+      const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${folder}/${fileName}`);
+      const data = await res.json();
+
+      const commitsRes = await fetch(`https://api.github.com/repos/${username}/${repo}/commits?path=${folder}/${fileName}&per_page=1`);
+      const commits = await commitsRes.json();
+      const lastModified = commits[0]?.commit?.committer?.date || "";
+
+      const fileType = getFileType(fileName);
+      const fileSize = formatSize(data.size);
+      const dateStr = formatDate(lastModified);
+
+      previewBox.innerHTML = `
+        <div class="content-card">
+          <img src="../assets/images/resource.png" alt="文件预览" />
+          <h2>${fileName}</h2>
+          <p>类型：${fileType}　大小：${fileSize}　上传日期：${dateStr}</p>
+          <a href="${fileUrl}" class="btn-download" download>点击下载</a>
+        </div>
+      `;
+    }
+
+    loadPreview();
+  </script>
+
+  <style>
+    .preview-box {
+      display: flex;
+      justify-content: center;
+    }
+    .btn-download {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #0070f3;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    .btn-download:hover {
+      background-color: #0051a3;
+    }
+  </style>
 </body>
 </html>
