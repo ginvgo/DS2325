@@ -1,0 +1,3 @@
+permalink: pretty    # 自动生成目录式 URL（如 /page/）
+include:
+  - "*.html"         # 强制 Jekyll 处理所有 HTML 文件（即使没有 YAML 头）
