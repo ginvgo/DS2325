@@ -11,19 +11,30 @@ async function fetchResources() {
 
   container.innerHTML = ""; // 清空加载提示
 
+  // 🔴 如果没有资源文件，显示提示卡片
+  if (!Array.isArray(data) || data.length === 0 || data.message === "Not Found") {
+    container.innerHTML = `
+      <div class="content-card empty-card">
+        <img src="../assets/images/empty.png" alt="暂无资源" style="opacity: 0.5;">
+        <h3>暂无资源文件</h3>
+        <p>请稍后再来，或者联系管理员上传文件。</p>
+      </div>
+    `;
+    return;
+  }
+
   for (let file of data) {
     const { name, size, download_url, path } = file;
 
-    // 获取文件最后修改时间（通过提交）
     const commitsRes = await fetch(`https://api.github.com/repos/${username}/${repo}/commits?path=${path}&per_page=1`);
     const commits = await commitsRes.json();
     const lastModified = commits[0]?.commit?.committer?.date || "";
 
     const card = document.createElement("a");
     card.className = "content-card";
-    card.href = `preview.html?file=${encodeURIComponent(name)}`; // 点进去跳转预览页
+    card.href = `preview.html?file=${encodeURIComponent(name)}`;
     card.innerHTML = `
-      <img src="../assets/images/resource.png" alt="资源图片">
+      <img src="../assets/images/resource.png" alt="资源">
       <h3>${name}</h3>
       <p>
         类型：${getFileType(name)}　
