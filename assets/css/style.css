@@ -555,4 +555,14 @@ header .container {
 .download-button:hover {
   background-color: #005a99;
 }
-
+/* ==================== 资源为空卡片 ==================== */
+.empty-card {
+  text-align: center;
+  background-color: #f9f9f9;
+  color: #888;
+  border: 1px dashed #ccc;
+}
+.empty-card img {
+  width: 100px;
+  margin: 20px auto;
+}
