@@ -4,20 +4,40 @@
   <meta charset="UTF-8">
   <title>Redirecting...</title>
   <script>
-    // 获取当前路径
-    const path = window.location.pathname;
+        // 获取当前路径
+        const path = window.location.pathname;
 
-    // 处理路径，如 "/about/" -> "about", "/contact" -> "contact"
-    let page = path.replace(/^\/+|\/+$/g, ""); // 去掉首尾斜杠
+        // 提取路径中的页面名称（如 "/about/" -> "about", "/contact" -> "contact"）
+        let page = path.replace(/^\/+|\/+$/g, ""); // 去掉首尾斜杠
 
-    // 若为空，则跳转主页
-    if (!page) {
-      window.location.href = "/index.html";
-    } else {
-      // 跳转到相应的 .html 文件
-      window.location.href = `/${page}.html`;
-    }
-  </script>
+        // 如果没有页面（空路径），跳转到首页
+        if (!page) {
+            window.location.href = "/index.html";
+        } else {
+            // 假设你有 .html、.md 或其他格式的页面
+            let validFormats = ['.html', '.md']; // 支持的格式
+            let found = false;
+
+            for (let format of validFormats) {
+                let fullPath = `/${page}${format}`;
+                let xhr = new XMLHttpRequest();
+                xhr.open('HEAD', fullPath, false);
+                xhr.send();
+
+                // 如果文件存在，跳转到对应文件
+                if (xhr.status === 200) {
+                    window.location.href = fullPath;
+                    found = true;
+                    break;
+                }
+            }
+
+            // 如果没有找到，跳转到一个默认页面或保持404
+            if (!found) {
+                window.location.href = "/404.html";
+            }
+        }
+    </script>
 </head>
 <body>
   <p>Redirecting...</p>
