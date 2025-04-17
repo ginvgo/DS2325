@@ -23,33 +23,77 @@
         </div>
     </header>
 
-    <main class="container">
-        <h1 style="margin-top: 20px;">资源列表</h1>
-        <p class="subtitle">下载有用的资源文件，包括模板、指南和更多。</p>
+    <!-- 省略头部不变部分 -->
+<main class="container">
+    <h1 style="margin-top: 20px;">资源列表</h1>
+    <p class="subtitle">下载有用的资源文件，包括模板、指南和更多。</p>
+    
+    <section class="content-grid">
+        <!-- 资源卡片将在这里动态生成 -->
+    </section>
+</main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const config = {
+        owner: 'YOUR_GITHUB_USERNAME', // 替换为你的GitHub用户名
+        repo: 'YOUR_REPO_NAME',        // 替换为你的仓库名
+        path: 'resources'              // 资源目录路径
+    };
+
+    // 获取目录文件列表
+    fetch(`https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}`)
+    .then(response => response.json())
+    .then(files => {
+        const grid = document.querySelector('.content-grid');
+        grid.innerHTML = '';
         
-        <section class="content-grid">
-            <a href="preview.html?filename=高级运营常备表格.xlsx&filetype=application/vnd.openxmlformats-officedocument.spreadsheetml.sheet&filesize=1024KB&filedate=2025/04/17&fileurl=高级运营常备表格.xlsx" class="content-card">
-                <img src="../assets/images/resource.png" alt="设计模板">
-                <h3>高级运营常备表格</h3>
-                <p>类型：xlsx  日期：2025/04/17</p>
-            </a>
-            
-            <a href="preview.html?filename=使用指南.pdf&filetype=application/pdf&filesize=2048KB&filedate=2025/04/17&fileurl=使用指南.pdf" class="content-card">
-                <img src="../assets/images/resource.png" alt="使用指南">
-                <h3>使用指南</h3>
-                <p>类型：PDF  日期：2025/04/17</p>
-            </a>
-            
-            <!-- 可以继续添加更多资源卡片 -->
-        </section>
-    </main>
+        files.forEach(file => {
+            if (file.type === 'file') {
+                createFileCard(file, grid, config);
+            }
+        });
+    })
+    .catch(error => console.error('加载失败:', error));
+});
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <h2 class="contact-title">C</h2>
-        </div>
-    </footer>
+async function createFileCard(file, container, config) {
+    // 获取提交信息
+    const commit = await fetch(
+        `https://api.github.com/repos/${config.owner}/${config.repo}/commits?path=${config.path}/${file.name}&per_page=1`
+    ).then(r => r.json());
+    
+    // 生成卡片
+    const card = document.createElement('a');
+    card.className = 'content-card';
+    card.href = `preview.html?file=${encodeURIComponent(file.name)}`;
+    
+    card.innerHTML = `
+        <img src="../assets/images/resource.png" alt="${file.name}">
+        <h3>${file.name}</h3>
+        <p>
+            类型：${getFileType(file.name)} 
+            大小：${formatSize(file.size)} 
+            更新：${new Date(commit[0].commit.committer.date).toLocaleDateString()}
+        </p>
+    `;
+    
+    container.appendChild(card);
+}
 
-    <script src="../assets/js/main.js"></script>
-</body>
-</html>
+// 辅助函数
+function getFileType(name) {
+    return name.split('.').pop().toUpperCase();
+}
+
+function formatSize(bytes) {
+    const units = ['B', 'KB', 'MB', 'GB'];
+    let size = bytes;
+    let unitIndex = 0;
+    while (size >= 1024 && unitIndex < units.length-1) {
+        size /= 1024;
+        unitIndex++;
+    }
+    return `${size.toFixed(2)} ${units[unitIndex]}`;
+}
+</script>
