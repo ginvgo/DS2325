@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>资源</title>
-  <link rel="stylesheet" href="../assets/css/style.css">
-  <link rel="icon" href="../assets/images/logo.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>资源列表</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="icon" href="../assets/images/logo.png" />
 </head>
 <body>
   <header>
     <div class="container">
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="网站Logo">
+        <img src="../assets/images/logo.png" alt="网站Logo" />
         <span>456</span>
       </div>
       <nav>
@@ -27,8 +27,8 @@
     <h1 style="margin-top: 20px;">资源列表</h1>
     <p class="subtitle">下载有用的资源文件，包括模板、指南和更多。</p>
 
-    <section id="resource-container" class="content-grid">
-      <!-- 资源卡片将通过 JS 自动加载到这里 -->
+    <section class="content-grid">
+      <!-- JS会在这里动态插入资源卡片 -->
     </section>
   </main>
 
@@ -39,17 +39,15 @@
   </footer>
 
   <script>
-    const username = "ginvgo";
-    const repo = "DS2325";
-    const folder = "resources"; // GitHub 仓库中的资源文件夹名称
+    const GITHUB_USER = "ginvgo";
+    const GITHUB_REPO = "DS2325";
+    const GITHUB_FOLDER = "resource";
 
     function getFileType(filename) {
-      const ext = filename.split('.').pop().toLowerCase();
-      return ext || '未知';
+      return filename.split('.').pop().toUpperCase();
     }
 
     function formatSize(size) {
-      if (!size) return '0 B';
       const units = ['B', 'KB', 'MB', 'GB'];
       let i = 0;
       while (size >= 1024 && i < units.length - 1) {
@@ -60,52 +58,46 @@
     }
 
     function formatDate(isoDate) {
-      if (!isoDate) return '未知';
       const date = new Date(isoDate);
       return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
     }
 
     async function fetchResources() {
-      const container = document.getElementById("resource-container");
-      container.innerHTML = "<p>加载资源中...</p>";
+      const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${GITHUB_FOLDER}`);
+      const files = await res.json();
 
-      const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${folder}`);
-      const data = await res.json();
+      const grid = document.querySelector(".content-grid");
 
-      container.innerHTML = ""; // 清除加载提示
-
-      if (!Array.isArray(data) || data.length === 0 || data.message === "Not Found") {
-        container.innerHTML = `
-          <div class="content-card empty-card">
-            <img src="../assets/images/empty.png" alt="暂无资源" style="opacity: 0.5;">
-            <h3>暂无资源文件</h3>
-            <p>请稍后再来，或者联系管理员上传文件。</p>
-          </div>
-        `;
+      if (!Array.isArray(files) || files.length === 0) {
+        grid.innerHTML = `
+          <div class="content-card">
+            <img src="../assets/images/empty.png" alt="暂无资源" />
+            <h3>暂无资源</h3>
+            <p>目前没有可供下载的文件</p>
+          </div>`;
         return;
       }
 
-      for (let file of data) {
-        const { name, size, path } = file;
+      const cards = await Promise.all(
+        files.map(async file => {
+          const commitsRes = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?path=${GITHUB_FOLDER}/${file.name}&per_page=1`);
+          const commits = await commitsRes.json();
+          const lastModified = commits[0]?.commit?.committer?.date || "";
 
-        const commitsRes = await fetch(`https://api.github.com/repos/${username}/${repo}/commits?path=${path}&per_page=1`);
-        const commits = await commitsRes.json();
-        const lastModified = commits[0]?.commit?.committer?.date || "";
+          const fileType = getFileType(file.name);
+          const size = formatSize(file.size);
+          const date = formatDate(lastModified);
+          return `
+            <a href="preview.html?file=${encodeURIComponent(file.name)}" class="content-card">
+              <img src="../assets/images/resource.png" alt="资源图标" />
+              <h3>${file.name}</h3>
+              <p>类型：${fileType}　大小：${size}　日期：${date}</p>
+            </a>
+          `;
+        })
+      );
 
-        const card = document.createElement("a");
-        card.className = "content-card";
-        card.href = `preview.html?file=${encodeURIComponent(name)}`;
-        card.innerHTML = `
-          <img src="../assets/images/resource.png" alt="资源">
-          <h3>${name}</h3>
-          <p>
-            类型：${getFileType(name)}　
-            大小：${formatSize(size)}　
-            日期：${formatDate(lastModified)}
-          </p>
-        `;
-        container.appendChild(card);
-      }
+      grid.innerHTML = cards.join('');
     }
 
     fetchResources();
