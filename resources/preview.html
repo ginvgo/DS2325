@@ -5,63 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文件预览</title>
     <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="icon" href="../assets/images/logo.png">
 </head>
 <body>
-    <header><!-- 与首页相同的头部 --></header>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="../assets/images/logo.png" alt="网站Logo">
+                <span>456</span>
+            </div>
+            <nav>
+                <a href="../articles/">文章</a>
+                <a href="../tools/">工具</a>
+                <a href="../calculators/">计算器</a>
+                <a href="../resources/" class="active">资源</a>
+            </nav>
+        </div>
+    </header>
 
     <main class="container">
-        <h1 id="fileName"></h1>
-        <div class="file-meta">
-            <p>文件类型：<span id="fileType"></span></p>
-            <p>文件大小：<span id="fileSize"></span></p>
-            <p>最后更新：<span id="fileDate"></span></p>
+        <h1>文件预览</h1>
+        <div id="file-info">
+            <h2 id="filename"></h2>
+            <p>类型: <span id="filetype"></span></p>
+            <p>大小: <span id="filesize"></span></p>
+            <p>修改日期: <span id="filedate"></span></p>
+            <img id="preview-image" src="" alt="文件预览" style="display:none; max-width:100%;">
+            <a id="download-button" href="#" class="button">下载文件</a>
         </div>
-        <a id="downloadBtn" class="btn">下载文件</a>
     </main>
 
+    <footer class="site-footer">
+        <div class="footer-container">
+            <h2 class="contact-title">C</h2>
+        </div>
+    </footer>
+
     <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-        const params = new URLSearchParams(location.search);
-        const fileName = params.get('file');
-        
-        const config = {
-            owner: 'ginvgo',
-            repo: 'DS2325',
-            path: 'resources'
-        };
+        // 获取URL参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const filename = urlParams.get('filename');
+        const filetype = urlParams.get('filetype');
+        const filesize = urlParams.get('filesize');
+        const filedate = urlParams.get('filedate');
+        const fileurl = urlParams.get('fileurl');
 
-        try {
-            // 获取文件元数据
-            const fileRes = await fetch(
-                `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}/${fileName}`
-            );
-            const fileData = await fileRes.json();
+        // 显示文件信息
+        document.getElementById('filename').textContent = filename;
+        document.getElementById('filetype').textContent = filetype;
+        document.getElementById('filesize').textContent = filesize;
+        document.getElementById('filedate').textContent = filedate;
 
-            // 获取提交信息
-            const commitRes = await fetch(
-                `https://api.github.com/repos/${config.owner}/${config.repo}/commits?path=${config.path}/${fileName}&per_page=1`
-            );
-            const [commit] = await commitRes.json();
+        // 设置下载按钮的链接
+        document.getElementById('download-button').href = fileurl;
 
-            // 显示信息
-            document.getElementById('fileName').textContent = fileData.name;
-            document.getElementById('fileType').textContent = fileData.name.split('.').pop().toUpperCase();
-            document.getElementById('fileDate').textContent = 
-                new Date(commit.commit.committer.date).toLocaleDateString();
-                
-            // 获取精确文件大小
-            const headRes = await fetch(fileData.download_url, { method: 'HEAD' });
-            const size = headRes.headers.get('content-length');
-            document.getElementById('fileSize').textContent = 
-                (size/1024/1024).toFixed(2) + ' MB';
-
-            // 设置下载按钮
-            document.getElementById('downloadBtn').href = fileData.download_url;
-        } catch (error) {
-            console.error('加载失败:', error);
-            alert('文件加载失败，请稍后重试');
+        // 如果是图片文件，显示预览图片
+        if (filetype.toLowerCase().startsWith('image/')) {
+            const previewImage = document.getElementById('preview-image');
+            previewImage.src = fileurl;
+            previewImage.style.display = 'block';
         }
-    });
     </script>
 </body>
 </html>
