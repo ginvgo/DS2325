@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>资源列表</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="icon" href="../assets/images/logo.png" />
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="网站Logo" />
+        <span>456</span>
+      </div>
+      <nav>
+        <a href="../articles/">文章</a>
+        <a href="../tools/">工具</a>
+        <a href="../calculators/">计算器</a>
+        <a href="../resources/" class="active">资源</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 style="margin-top: 20px;">资源列表</h1>
+    <p class="subtitle">下载有用的资源文件，包括模板、指南和更多。</p>
+
+    <section class="content-grid">
+      <!-- JS会在这里动态插入资源卡片 -->
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-container">
+      <h2 class="contact-title">C</h2>
+    </div>
+  </footer>
+
+  <script>
+    const GITHUB_USER = "ginvgo";
+    const GITHUB_REPO = "DS2325";
+    const GITHUB_FOLDER = "resource";
+
+    function getFileType(filename) {
+      return filename.split('.').pop().toUpperCase();
+    }
+
+    function formatSize(size) {
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let i = 0;
+      while (size >= 1024 && i < units.length - 1) {
+        size /= 1024;
+        i++;
+      }
+      return size.toFixed(1) + ' ' + units[i];
+    }
+
+    function formatDate(isoDate) {
+      const date = new Date(isoDate);
+      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+    }
+
+    async function fetchResources() {
+      const res = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${GITHUB_FOLDER}`);
+      const files = await res.json();
+
+      const grid = document.querySelector(".content-grid");
+
+      if (!Array.isArray(files) || files.length === 0) {
+        grid.innerHTML = `
+          <div class="content-card">
+            <img src="../assets/images/empty.png" alt="暂无资源" />
+            <h3>暂无资源</h3>
+            <p>目前没有可供下载的文件</p>
+          </div>`;
+        return;
+      }
+
+      const cards = await Promise.all(
+        files.map(async file => {
+          const commitsRes = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/commits?path=${GITHUB_FOLDER}/${file.name}&per_page=1`);
+          const commits = await commitsRes.json();
+          const lastModified = commits[0]?.commit?.committer?.date || "";
+
+          const fileType = getFileType(file.name);
+          const size = formatSize(file.size);
+          const date = formatDate(lastModified);
+          return `
+            <a href="preview.html?file=${encodeURIComponent(file.name)}" class="content-card">
+              <img src="../assets/images/resource.png" alt="资源图标" />
+              <h3>${file.name}</h3>
+              <p>类型：${fileType}　大小：${size}　日期：${date}</p>
+            </a>
+          `;
+        })
+      );
+
+      grid.innerHTML = cards.join('');
+    }
+
+    fetchResources();
+  </script>
+</body>
+</html>
