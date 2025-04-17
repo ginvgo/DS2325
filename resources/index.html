@@ -1,49 +1,114 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>资源 | Ginv</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="icon" href="../assets/images/logo.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>资源</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="../assets/images/logo.png">
 </head>
 <body>
-    <header>
+  <header>
     <div class="container">
-        <div class="logo">
-            <img src="../assets/images/logo.png" alt="网站Logo">
-            <span>Ginv</span>
-        </div>
-        <nav>
-            <a href="../articles/" class="active">文章</a>
-            <a href="../tools/">工具</a>
-            <a href="../calculators/">计算器</a>
-            <a href="../resources/">资源</a>
-        </nav>
-        <div class="header-actions">
-            <button id="home-button" class="home-button">返回主页</button>
-            <button id="theme-toggle" class="theme-toggle">🌙 夜间模式</button>
-        </div>
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="网站Logo">
+        <span>456</span>
+      </div>
+      <nav>
+        <a href="../articles/">文章</a>
+        <a href="../tools/">工具</a>
+        <a href="../calculators/">计算器</a>
+        <a href="../resources/" class="active">资源</a>
+      </nav>
     </div>
-</header>
+  </header>
 
-   <main class="container">
-    <h1>资源</h1>
+  <main class="container">
+    <h1 style="margin-top: 20px;">资源列表</h1>
     <p class="subtitle">下载有用的资源文件，包括模板、指南和更多。</p>
-    
-    <section class="content-grid" id="resource-container">
-  <!-- JS 自动填充资源卡片 -->
-</section>
 
-</main>
+    <section id="resource-container" class="content-grid">
+      <!-- 资源卡片将通过 JS 自动加载到这里 -->
+    </section>
+  </main>
 
-    <footer>
-        <div class="container">
-            <p>© 2025 Ginv. 保留所有权利.</p>
-        </div>
-    </footer>
+  <footer class="site-footer">
+    <div class="footer-container">
+      <h2 class="contact-title">C</h2>
+    </div>
+  </footer>
 
-    <script src="../assets/js/main.js"></script>
-    <script src="../assets/js/resource-list.js"></script>
+  <script>
+    const username = "ginvgo";
+    const repo = "DS2325";
+    const folder = "resources"; // GitHub 仓库中的资源文件夹名称
+
+    function getFileType(filename) {
+      const ext = filename.split('.').pop().toLowerCase();
+      return ext || '未知';
+    }
+
+    function formatSize(size) {
+      if (!size) return '0 B';
+      const units = ['B', 'KB', 'MB', 'GB'];
+      let i = 0;
+      while (size >= 1024 && i < units.length - 1) {
+        size /= 1024;
+        i++;
+      }
+      return size.toFixed(1) + ' ' + units[i];
+    }
+
+    function formatDate(isoDate) {
+      if (!isoDate) return '未知';
+      const date = new Date(isoDate);
+      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+    }
+
+    async function fetchResources() {
+      const container = document.getElementById("resource-container");
+      container.innerHTML = "<p>加载资源中...</p>";
+
+      const res = await fetch(`https://api.github.com/repos/${username}/${repo}/contents/${folder}`);
+      const data = await res.json();
+
+      container.innerHTML = ""; // 清除加载提示
+
+      if (!Array.isArray(data) || data.length === 0 || data.message === "Not Found") {
+        container.innerHTML = `
+          <div class="content-card empty-card">
+            <img src="../assets/images/empty.png" alt="暂无资源" style="opacity: 0.5;">
+            <h3>暂无资源文件</h3>
+            <p>请稍后再来，或者联系管理员上传文件。</p>
+          </div>
+        `;
+        return;
+      }
+
+      for (let file of data) {
+        const { name, size, path } = file;
+
+        const commitsRes = await fetch(`https://api.github.com/repos/${username}/${repo}/commits?path=${path}&per_page=1`);
+        const commits = await commitsRes.json();
+        const lastModified = commits[0]?.commit?.committer?.date || "";
+
+        const card = document.createElement("a");
+        card.className = "content-card";
+        card.href = `preview.html?file=${encodeURIComponent(name)}`;
+        card.innerHTML = `
+          <img src="../assets/images/resource.png" alt="资源">
+          <h3>${name}</h3>
+          <p>
+            类型：${getFileType(name)}　
+            大小：${formatSize(size)}　
+            日期：${formatDate(lastModified)}
+          </p>
+        `;
+        container.appendChild(card);
+      }
+    }
+
+    fetchResources();
+  </script>
 </body>
 </html>
