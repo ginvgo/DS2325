@@ -31,27 +31,19 @@
     <h1 style="margin-top: 20px;">资源列表</h1>
     <p class="subtitle">下载有用的资源文件，包括模板、指南和更多。</p>
     
-    <section id="content-grid" class="content-grid"></section>
-
-<script>
-    fetch('resources/files.json')
-        .then(response => response.json())
-        .then(files => {
-            const contentGrid = document.getElementById('content-grid');
-            files.forEach(file => {
-                const card = document.createElement('a');
-                card.href = `preview.html?filename=${encodeURIComponent(file.filename)}&filetype=${file.filetype}&filesize=${file.filesize}&filedate=${file.filedate}&fileurl=${encodeURIComponent(file.fileurl)}`;
-                card.className = 'content-card';
-                card.innerHTML = `
-                    <img src="../assets/images/resource.png" alt="${file.filename}">
-                    <h3>${file.filename}</h3>
-                    <p>类型：${file.filetype.split('/').pop()}  日期：${file.filedate}</p>
-                `;
-                contentGrid.appendChild(card);
-            });
-        });
-</script>
-</main>
+    <section class="content-grid">
+        <a href="高级运营常备表格.xlsx" class="content-card">
+            <img src="../assets/images/resource.png" alt="设计模板">
+            <h3>高级运营常备表格</h3>
+            <p>类型：xlsx  日期：2025/04/17</p>
+        </a>
+        
+        <a href="#" class="content-card">
+            <img src="../assets/images/resource.png" alt="使用指南">
+            <h3>使用指南</h3>
+            <p>类型：PDF  日期：2025/04/17</p>
+        </a>
+        
 
    <!-- 底部联系栏 -->
 <footer class="site-footer">
