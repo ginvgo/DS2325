@@ -68,7 +68,20 @@
     .download-button:hover {
       background-color: #0056b3;
      }
-    
+    .back-button {
+    padding: 8px 12px; /* 内边距 */
+    border-radius: var(--radius); /* 圆角 */
+    background-color: var(--primary-color); /* 背景色 */
+    color: white; /* 字体颜色 */
+    border: none; /* 无边框 */
+    cursor: pointer; /* 手型光标 */
+    font-size: 0.9rem; /* 字体大小 */
+    transition: all 0.2s; /* 过渡效果 */
+}
+
+.back-button:hover {
+    background-color: var(--primary-hover); /* 悬停时背景色 */
+    transform: translateY(-1px); /* 悬停时上移 */
 
   </style>
 </head>
