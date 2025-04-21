@@ -433,7 +433,7 @@ header .container {
   gap: 15px;
 }
 
-.home-button, .theme-toggle {
+.home-button, .theme-toggle .back-button {
   padding: 8px 12px;
   border-radius: var(--radius);
   background-color: var(--primary-color);
@@ -444,7 +444,7 @@ header .container {
   transition: all 0.2s;
 }
 
-.home-button:hover, .theme-toggle:hover {
+.home-button:hover, .theme-toggle:hover .back-button:hover {
   background-color: var(--primary-hover);
   transform: translateY(-1px);
 }
