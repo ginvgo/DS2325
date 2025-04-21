@@ -572,9 +572,11 @@ header .container {
   background-color: #005a99;
 }
 /* 已复制弹窗通知 */
+const style = document.createElement('style');
+style.innerHTML = `
 .notification {
     position: absolute;
-    bottom: 60px; 
+    bottom: 60px; /* 调整为复制按钮下方 */
     left: 50%;
     transform: translateX(-50%);
     background-color: #333;
@@ -584,3 +586,5 @@ header .container {
     z-index: 1000;
     transition: opacity 0.5s ease;
 }
+`;
+document.head.appendChild(style);
