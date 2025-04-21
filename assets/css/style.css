@@ -571,4 +571,15 @@ header .container {
 .download-button:hover {
   background-color: #005a99;
 }
-
+/* 已复制弹窗通知 */
+.copy-notification {
+    position: fixed;
+    bottom: 20px; /* 从底部距离 */
+    right: 20px; /* 从右侧距离 */
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 5px;
+    z-index: 1000; /* 确保在最上层 */
+    transition: opacity 0.5s ease; /* 添加淡出效果 */
+}
