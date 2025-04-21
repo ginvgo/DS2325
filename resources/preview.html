@@ -1,70 +1,38 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文件预览</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="icon" href="../assets/images/logo.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>资源预览 | Ginv</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="logo">
-                <img src="../assets/images/logo.png" alt="网站Logo">
-                <span>456</span>
-            </div>
-            <nav>
-                <a href="../articles/">文章</a>
-                <a href="../tools/">工具</a>
-                <a href="../calculators/">计算器</a>
-                <a href="../resources/" class="active">资源</a>
-            </nav>
-        </div>
-    </header>
+  <div class="container" style="margin-top: 40px;">
+    <h1 id="resource-title">资源标题</h1>
+    <p id="resource-info">类型：--，日期：--</p>
 
-    <main class="container">
-        <h1>文件预览</h1>
-        <div id="file-info">
-            <h2 id="filename"></h2>
-            <p>类型: <span id="filetype"></span></p>
-            <p>大小: <span id="filesize"></span></p>
-            <p>修改日期: <span id="filedate"></span></p>
-            <img id="preview-image" src="" alt="文件预览" style="display:none; max-width:100%;">
-            <a id="download-button" href="#" class="button">下载文件</a>
-        </div>
-    </main>
+    <div style="margin-top: 20px;">
+      <button id="download-btn" class="download-button">下载资源</button>
+    </div>
+  </div>
 
-    <footer class="site-footer">
-        <div class="footer-container">
-            <h2 class="contact-title">C</h2>
-        </div>
-    </footer>
+  <script>
+    // 获取 URL 参数
+    const params = new URLSearchParams(window.location.search);
+    const file = params.get("file");
+    const title = params.get("title");
+    const type = params.get("type");
+    const date = params.get("date");
 
-    <script>
-        // 获取URL参数
-        const urlParams = new URLSearchParams(window.location.search);
-        const filename = urlParams.get('filename');
-        const filetype = urlParams.get('filetype');
-        const filesize = urlParams.get('filesize');
-        const filedate = urlParams.get('filedate');
-        const fileurl = urlParams.get('fileurl');
+    // 设置页面内容
+    document.getElementById("resource-title").innerText = title || "资源预览";
+    document.getElementById("resource-info").innerText = `类型：${type}  日期：${date}`;
 
-        // 显示文件信息
-        document.getElementById('filename').textContent = filename;
-        document.getElementById('filetype').textContent = filetype;
-        document.getElementById('filesize').textContent = filesize;
-        document.getElementById('filedate').textContent = filedate;
-
-        // 设置下载按钮的链接
-        document.getElementById('download-button').href = fileurl;
-
-        // 如果是图片文件，显示预览图片
-        if (filetype.toLowerCase().startsWith('image/')) {
-            const previewImage = document.getElementById('preview-image');
-            previewImage.src = fileurl;
-            previewImage.style.display = 'block';
-        }
-    </script>
+    // 设置下载按钮
+    const downloadBtn = document.getElementById("download-btn");
+    downloadBtn.addEventListener("click", () => {
+      window.location.href = file;
+    });
+  </script>
 </body>
 </html>
