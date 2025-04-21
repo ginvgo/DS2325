@@ -5,43 +5,108 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>资源预览 | Ginv</title>
   <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    .preview-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 40px auto;
+      max-width: 1000px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .preview-image {
+      flex: 1 1 45%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 20px;
+    }
+
+    .preview-image img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .preview-info {
+      flex: 1 1 45%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .preview-info h1 {
+      margin-bottom: 20px;
+    }
+
+    .preview-info p {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #444;
+    }
+
+    .download-button {
+      padding: 12px 24px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 20px;
+      width: fit-content;
+    }
+
+    .download-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
-  <div class="container" style="margin-top: 40px;">
-    <h1 id="resource-title">资源标题</h1>
-    <p id="resource-info">类型：--，日期：--</p>
+  <div class="preview-container">
+    <!-- 左侧：预览图片 -->
+    <div class="preview-image">
+      <img id="preview-img" src="../assets/images/resource.png" alt="资源预览图">
+    </div>
 
-    <div style="margin-top: 20px;">
+    <!-- 右侧：资源信息 -->
+    <div class="preview-info">
+      <h1 id="resource-title">资源标题</h1>
+      <p id="resource-type">类型：</p>
+      <p id="resource-date">日期：</p>
       <button id="download-btn" class="download-button">下载资源</button>
     </div>
   </div>
 
   <script>
-    // 获取 URL 参数
     const params = new URLSearchParams(window.location.search);
     const file = params.get("file");
     const title = params.get("title");
     const type = params.get("type");
     const date = params.get("date");
 
-    // 设置页面内容
+    // 设置文字信息
     document.getElementById("resource-title").innerText = title || "资源预览";
-    document.getElementById("resource-info").innerText = `类型：${type}  日期：${date}`;
+    document.getElementById("resource-type").innerText = `类型：${type}`;
+    document.getElementById("resource-date").innerText = `日期：${date}`;
 
-    // 设置下载按钮
-    const downloadBtn = document.getElementById("download-btn");
-    downloadBtn.addEventListener("click", () => {
+    // 下载按钮跳转
+    document.getElementById("download-btn").addEventListener("click", () => {
       window.location.href = file;
     });
 
-    if (type.toLowerCase() === 'pdf') {
-  const iframe = document.createElement('iframe');
-  iframe.src = file;
-  iframe.width = "100%";
-  iframe.height = "600px";
-  document.body.appendChild(iframe);
-}
-
+    // 可选：根据类型设置不同图片
+    const previewImg = document.getElementById("preview-img");
+    if (type && type.toLowerCase() === 'pdf') {
+      previewImg.src = '../assets/images/pdf-preview.png';
+    } else if (type.toLowerCase() === 'xlsx' || type.toLowerCase() === 'xls') {
+      previewImg.src = '../assets/images/excel-preview.png';
+    } // 可继续扩展其他类型
   </script>
 </body>
 </html>
