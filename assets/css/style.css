@@ -572,19 +572,16 @@ header .container {
   background-color: #005a99;
 }
 /* 已复制弹窗通知 */
-const style = document.createElement('style');
-style.innerHTML = `
 .notification {
-    position: absolute;
-    bottom: 60px; /* 调整为复制按钮下方 */
+    position: fixed;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     background-color: #333;
     color: #fff;
     padding: 10px 15px;
     border-radius: 5px;
     z-index: 1000;
     transition: opacity 0.5s ease;
+    text-align: center;
 }
-`;
-document.head.appendChild(style);
