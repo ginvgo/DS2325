@@ -1,77 +1,83 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>资源 | Ginv</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="icon" href="../assets/images/logo.png">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>资源详情预览</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="../assets/images/logo.png">
 
   <style>
-    .preview-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      margin: 40px auto;
-      max-width: 1000px;
-      padding: 20px;
-      border-radius: 10px;
-      background-color: #f9f9f9;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 40px;
+      background-color: #f5f5f5;
     }
-
-    .preview-image {
-      flex: 1 1 45%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: #fff;
-      border: 1px solid #ddd;
-      padding: 20px;
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
     }
-
-    .preview-image img {
-      max-width: 100%;
-      height: auto;
+    .info-section {
+      margin-bottom: 40px;
     }
-
-    .preview-info {
-      flex: 1 1 45%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .preview-info h1 {
-      margin-bottom: 20px;
-    }
-
-    .preview-info p {
+    .info-section h2 {
       margin-bottom: 10px;
-      font-size: 16px;
-      color: #444;
     }
-
-    .download-button {
-      padding: 12px 24px;
-      background-color: #007bff;
-      color: #fff;
+    .meta {
       font-size: 16px;
+      margin: 5px 0;
+    }
+    .download-btn {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      margin-top: 20px;
-      width: fit-content;
     }
-
-    .download-button:hover {
+    .preview-section {
+      text-align: center;
+    }
+    .preview-section img {
+      max-width: 100%;
+      max-height: 500px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .nav-buttons {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .nav-buttons button {
+      padding: 10px 16px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .nav-buttons button:hover {
       background-color: #0056b3;
-     }
+    }
+    .counter {
+      margin-top: 10px;
+      color: #888;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
-   <header>
+    <header>
     <div class="container">
         <div class="logo">
             <img src="../assets/images/logo.png" alt="网站Logo">
@@ -88,50 +94,58 @@
         </div>
     </div>
 </header>
-  <div class="preview-container">
-    <!-- 左侧：预览图片 -->
-    <div class="preview-image">
-      <img id="preview-img" src="../assets/images/resource.png" alt="资源预览图">
-    </div>
 
-    <!-- 右侧：资源信息 -->
-    <div class="preview-info">
-      <h1 id="resource-title">资源标题</h1>
-      <p id="resource-type">类型：</p>
-      <p id="resource-date">日期：</p>
-      <button id="download-btn" class="download-button">下载资源</button>
-    </div>
+<div class="container">
+  <!-- 文件信息区 -->
+  <div class="info-section">
+    <h2>Photoshop 教程资源</h2>
+    <p class="meta">类型：视频教程</p>
+    <p class="meta">日期：2025-04-21</p>
+    <a class="download-btn" href="ps.zip" download>下载资源</a>
   </div>
 
-  <script>
-  const params = new URLSearchParams(window.location.search);
-  const file = params.get("file");
-  const title = params.get("title");
-  const type = params.get("type");
-  const date = params.get("date");
+  <!-- 预览图区 -->
+  <div class="preview-section">
+    <img id="preview-img" src="../assets/images/sources/ps/1.png" alt="预览图" />
+    <div class="counter" id="img-counter">1 / 3</div>
+    <div class="nav-buttons">
+      <button onclick="prevImage()">上一张</button>
+      <button onclick="nextImage()">下一张</button>
+    </div>
+  </div>
+</div>
 
-  // 设置文字信息
-  document.getElementById("resource-title").innerText = title || "资源预览";
-  document.getElementById("resource-type").innerText = `类型：${type}`;
-  document.getElementById("resource-date").innerText = `日期：${date}`;
+<script>
+  const folder = "ps";
+  const count = 3;
+  let index = 1;
 
-  // 预览图设置（去掉文件扩展名，设置为图片路径）
-  const filenameWithoutExt = file ? file.replace(/\.[^/.]+$/, "") : "default";
-  const previewImgPath = `../assets/images/sources/${filenameWithoutExt}.png`;
+  const img = document.getElementById("preview-img");
+  const counter = document.getElementById("img-counter");
 
-  const previewImg = document.getElementById("preview-img");
-  previewImg.src = previewImgPath;
+  function updateImage() {
+    img.src = `../assets/images/sources/${folder}/${index}.png`;
+    img.onerror = function () {
+      this.src = "../assets/images/resource.png";
+    };
+    counter.innerText = `${index} / ${count}`;
+  }
 
-  // 图片加载失败时显示默认图
-  previewImg.onerror = function () {
-    this.src = "../assets/images/No-resource.png";
-  };
+  function nextImage() {
+    index = index >= count ? 1 : index + 1;
+    updateImage();
+  }
 
-  // 下载按钮跳转
-  document.getElementById("download-btn").addEventListener("click", () => {
-    window.location.href = file;
-  });
+  function prevImage() {
+    index = index <= 1 ? count : index - 1;
+    updateImage();
+  }
+
+  updateImage();
 </script>
 
 </body>
 </html>
+
+
+
