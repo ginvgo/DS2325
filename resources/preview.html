@@ -116,33 +116,38 @@
 </div>
 
 <script>
-  const folder = "ps";
-  const count = 3;
-  let index = 1;
+  const params = new URLSearchParams(window.location.search);
+  const file = params.get("file");
+  const title = params.get("title") || "资源预览";
+  const type = params.get("type") || "未知";
+  const date = params.get("date") || "未指定";
 
-  const img = document.getElementById("preview-img");
-  const counter = document.getElementById("img-counter");
+  document.getElementById("resource-title").innerText = title;
+  document.getElementById("resource-type").innerText = `类型：${type}`;
+  document.getElementById("resource-date").innerText = `日期：${date}`;
 
-  function updateImage() {
-    img.src = `../assets/images/sources/${folder}/${index}.png`;
-    img.onerror = function () {
-      this.src = "../assets/images/resource.png";
-    };
-    counter.innerText = `${index} / ${count}`;
-  }
+  const imagePreview = document.getElementById("image-preview");
 
-  function nextImage() {
-    index = index >= count ? 1 : index + 1;
-    updateImage();
-  }
+  fetch(`../images/sources/${file}/images.json`)
+    .then(res => res.json())
+    .then(imageList => {
+      imageList.forEach(imgName => {
+        const img = document.createElement("img");
+        img.src = `../images/sources/${file}/${imgName}`;
+        img.alt = title;
+        imagePreview.appendChild(img);
+      });
+    })
+    .catch(err => {
+      imagePreview.innerHTML = "<p style='color:red'>图片加载失败，请检查文件路径或 JSON 文件。</p>";
+      console.error(err);
+    });
 
-  function prevImage() {
-    index = index <= 1 ? count : index - 1;
-    updateImage();
-  }
-
-  updateImage();
+  document.getElementById("download-btn").addEventListener("click", () => {
+    window.location.href = `../images/sources/${file}/`;
+  });
 </script>
+
 
 </body>
 </html>
