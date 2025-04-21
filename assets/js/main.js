@@ -34,42 +34,32 @@ function togglePopup(popupId) {
 
 // 复制功能
 function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).then(() => {
-    showCopyNotification(`已复制: ${text}`);
-  }).catch(err => {
-    console.error('复制失败:', err);
-    // 兼容旧浏览器
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-    showCopyNotification('已复制到剪贴板');
-  });
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification(`已复制: ${text}`);
+    }).catch(err => {
+        console.error('复制失败:', err);
+        // 兼容旧浏览器
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showNotification('已复制到剪贴板');
+    });
 }
 
-// 显示复制通知
-function showCopyNotification(message) {
-    // 检查是否已存在通知，如果存在则更新内容
-    let notification = document.getElementById('copy-notification');
+// 显示通知
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.innerText = message;
+    document.body.appendChild(notification);
     
-    if (!notification) {
-        // 创建通知元素
-        notification = document.createElement('div');
-        notification.id = 'copy-notification'; // 设置唯一 ID
-        notification.className = 'copy-notification';
-        document.body.appendChild(notification);
-    }
-    
-    // 更新通知内容并显示
-    notification.textContent = message;
-    notification.style.display = 'block';
-
     // 自动关闭通知
     setTimeout(() => {
-        notification.style.display = 'none'; // 隐藏通知
-    }, 2000); // 2秒后自动关闭
+        notification.remove();
+    }, 2000); // 2秒后关闭
 }
 
 // 点击外部关闭
