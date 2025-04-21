@@ -31,10 +31,11 @@ function togglePopup(popupId) {
   document.body.style.overflow = popup.classList.contains('active') ? 'hidden' : '';
 }
 
+
 // 复制功能
 function copyToClipboard(text) {
   navigator.clipboard.writeText(text).then(() => {
-    alert(`已复制: ${text}`);
+    showCopyNotification(`已复制: ${text}`);
   }).catch(err => {
     console.error('复制失败:', err);
     // 兼容旧浏览器
@@ -44,8 +45,21 @@ function copyToClipboard(text) {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
-    alert('已复制到剪贴板');
+    showCopyNotification('已复制到剪贴板');
   });
+}
+
+// 显示复制通知
+function showCopyNotification(message) {
+  const notification = document.createElement('div');
+  notification.className = 'copy-notification';
+  notification.textContent = message;
+  document.body.appendChild(notification);
+
+  // 自动关闭通知
+  setTimeout(() => {
+    notification.remove();
+  }, 2000); // 2秒后自动关闭
 }
 
 // 点击外部关闭
@@ -54,5 +68,3 @@ document.querySelectorAll('.popup-overlay').forEach(popup => {
     if (e.target === this) togglePopup(this.id);
   });
 });
-
- 
