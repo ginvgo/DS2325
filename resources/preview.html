@@ -100,13 +100,6 @@
       window.location.href = file;
     });
 
-    // 可选：根据类型设置不同图片
-    const previewImg = document.getElementById("preview-img");
-    if (type && type.toLowerCase() === 'pdf') {
-      previewImg.src = '../assets/images/pdf-preview.png';
-    } else if (type.toLowerCase() === 'xlsx' || type.toLowerCase() === 'xls') {
-      previewImg.src = '../assets/images/excel-preview.png';
-    } // 可继续扩展其他类型
   </script>
 </body>
 </html>
