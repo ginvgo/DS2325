@@ -54,12 +54,23 @@ function showNotification(message) {
     const notification = document.createElement('div');
     notification.className = 'notification';
     notification.innerText = message;
-    document.body.appendChild(notification);
-    
-    // 自动关闭通知
-    setTimeout(() => {
-        notification.remove();
-    }, 2000); // 2秒后关闭
+
+    // 获取.popup-content容器
+    const popupContent = document.querySelector('.popup-content');
+    if (popupContent) {
+        popupContent.appendChild(notification);
+        
+        // 自动关闭通知
+        setTimeout(() => {
+            notification.remove();
+        }, 2000); // 2秒后关闭
+    } else {
+        // 如果没有.popup-content，默认添加到body
+        document.body.appendChild(notification);
+        setTimeout(() => {
+            notification.remove();
+        }, 2000); // 2秒后关闭
+    }
 }
 
 // 点击外部关闭
