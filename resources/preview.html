@@ -104,22 +104,34 @@
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const file = params.get("file");
-    const title = params.get("title");
-    const type = params.get("type");
-    const date = params.get("date");
+  const params = new URLSearchParams(window.location.search);
+  const file = params.get("file");
+  const title = params.get("title");
+  const type = params.get("type");
+  const date = params.get("date");
 
-    // 设置文字信息
-    document.getElementById("resource-title").innerText = title || "资源预览";
-    document.getElementById("resource-type").innerText = `类型：${type}`;
-    document.getElementById("resource-date").innerText = `日期：${date}`;
+  // 设置文字信息
+  document.getElementById("resource-title").innerText = title || "资源预览";
+  document.getElementById("resource-type").innerText = `类型：${type}`;
+  document.getElementById("resource-date").innerText = `日期：${date}`;
 
-    // 下载按钮跳转
-    document.getElementById("download-btn").addEventListener("click", () => {
-      window.location.href = file;
-    });
+  // 预览图设置（去掉文件扩展名，设置为图片路径）
+  const filenameWithoutExt = file ? file.replace(/\.[^/.]+$/, "") : "default";
+  const previewImgPath = `../assets/images/sources/${filenameWithoutExt}.png`;
 
-  </script>
+  const previewImg = document.getElementById("preview-img");
+  previewImg.src = previewImgPath;
+
+  // 图片加载失败时显示默认图
+  previewImg.onerror = function () {
+    this.src = "../assets/images/resource.png";
+  };
+
+  // 下载按钮跳转
+  document.getElementById("download-btn").addEventListener("click", () => {
+    window.location.href = file;
+  });
+</script>
+
 </body>
 </html>
