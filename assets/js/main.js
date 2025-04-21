@@ -51,20 +51,30 @@ function copyToClipboard(text) {
 
 // 显示复制通知
 function showCopyNotification(message) {
-  const notification = document.createElement('div');
-  notification.className = 'copy-notification';
-  notification.textContent = message;
-  document.body.appendChild(notification);
+    // 检查是否已存在通知，如果存在则更新内容
+    let notification = document.getElementById('copy-notification');
+    
+    if (!notification) {
+        // 创建通知元素
+        notification = document.createElement('div');
+        notification.id = 'copy-notification'; // 设置唯一 ID
+        notification.className = 'copy-notification';
+        document.body.appendChild(notification);
+    }
+    
+    // 更新通知内容并显示
+    notification.textContent = message;
+    notification.style.display = 'block';
 
-  // 自动关闭通知
-  setTimeout(() => {
-    notification.remove();
-  }, 2000); // 2秒后自动关闭
+    // 自动关闭通知
+    setTimeout(() => {
+        notification.style.display = 'none'; // 隐藏通知
+    }, 2000); // 2秒后自动关闭
 }
 
 // 点击外部关闭
 document.querySelectorAll('.popup-overlay').forEach(popup => {
-  popup.addEventListener('click', function(e) {
-    if (e.target === this) togglePopup(this.id);
-  });
+    popup.addEventListener('click', function(e) {
+        if (e.target === this) togglePopup(this.id);
+    });
 });
