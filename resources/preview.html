@@ -33,6 +33,15 @@
     downloadBtn.addEventListener("click", () => {
       window.location.href = file;
     });
+
+    if (type.toLowerCase() === 'pdf') {
+  const iframe = document.createElement('iframe');
+  iframe.src = file;
+  iframe.width = "100%";
+  iframe.height = "600px";
+  document.body.appendChild(iframe);
+}
+
   </script>
 </body>
 </html>
